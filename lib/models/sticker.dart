@@ -1,28 +1,17 @@
+import 'package:country_flags/country_flags.dart';
+
 class Sticker {
-  final int id;
   final String number;
   final String section;
   int ammount;
+  String countryName;
+  CountryFlag? flag;
 
-  Sticker({required this.id,
+  Sticker({
   required this.section,
   required this.ammount,
-  required this.number
+  required this.number,
+  required this.countryName,
+  this.flag
   }); 
-
-  factory Sticker.fromJson(Map<String, dynamic> json) {
-  return Sticker(
-    id: json['id'],
-    number: json['position'],
-    section: json['section'],
-    ammount: json['ammount']
-  );
-}
-
-Map<String, dynamic> toJson() => {
-  'id': id,
-  'position': number,
-  'section': section,
-  'ammount' : ammount
-};
 }

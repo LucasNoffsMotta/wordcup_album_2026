@@ -41,10 +41,10 @@ class CardRowState extends State<CardRow> {
     return  Card(
       shape: RoundedRectangleBorder(
         side: BorderSide(
-      color: const Color.fromARGB(255, 107, 217, 245), // Your border color
+      color: const Color.fromARGB(255, 213, 247, 255), // Your border color
       width: 2.0,         // Border thickness
     ),
-        borderRadius: BorderRadius.circular(10)
+        borderRadius: BorderRadius.circular(90)
       ),
       color: setCardColor(),
       child: InkWell(
@@ -56,17 +56,9 @@ class CardRowState extends State<CardRow> {
                  mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    widget.sticker!.section,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black
-                    ),
-                  ),
-                  Text(
                     widget.sticker!.number.toString(),
                     style: const TextStyle(
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.black
                     ),
@@ -75,7 +67,7 @@ class CardRowState extends State<CardRow> {
                   Text(
                     '${widget.sticker!.ammount}',
                     style: const TextStyle(
-                      fontSize: 8,
+                      fontSize: 9,
                       color: Colors.black),
                   ),
                 ]
