@@ -108,7 +108,7 @@ class CollectionScreenState extends State<CollectionScreen> {
       if (!addedSections.containsKey(sticker.sectionName)) {
         widget.sectionsMap[sticker.sectionName] = [];
 
-        var stickersOfThisSection = widget.collection.where(
+        var stickersOfThisSection = widget.currentSelection!.where(
           (e) => e.sectionName == sticker.sectionName,
         );
 

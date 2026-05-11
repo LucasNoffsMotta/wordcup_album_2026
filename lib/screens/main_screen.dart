@@ -296,14 +296,7 @@ class MainScreenState extends State<MainScreen> {
       stickers,
       CountryFlag.fromCountryCode('FRA', theme: mainTheme),
     );
-    InsertTeamSection(
-      1,
-      'FRA',
-      20,
-      "França",
-      stickers,
-      CountryFlag.fromCountryCode('FRA', theme: mainTheme),
-    );
+
     InsertTeamSection(
       1,
       'SEN',
