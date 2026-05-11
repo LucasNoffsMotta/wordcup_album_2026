@@ -2,13 +2,11 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:wordcup_album_2026/core/theme/app_theme.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
-import 'package:wordcup_album_2026/render_entities/countrySection.dart';
 import 'package:wordcup_album_2026/screens/collection_screen.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({super.key});
   List<Sticker>? collection;
-  List<CountrySection>? sections;
 
   @override
   State<StatefulWidget> createState() {
@@ -24,12 +22,12 @@ class MainScreenState extends State<MainScreen> {
       width: 20,
       height: 20,
     );
-    widget.sections = [];
+
     InsertTeamSection(
       0,
       'FWC',
       8,
-      "Museu",
+      "Museu Inicio",
       stickers,
       CountryFlag.fromCountryCode('AX', theme: mainTheme),
     );
@@ -410,14 +408,7 @@ class MainScreenState extends State<MainScreen> {
       stickers,
       CountryFlag.fromCountryCode('GHA', theme: mainTheme),
     );
-    InsertTeamSection(
-      1,
-      'PAN',
-      20,
-      "Panamá",
-      stickers,
-      CountryFlag.fromCountryCode('PAN', theme: mainTheme),
-    );
+
     InsertTeamSection(
       1,
       'PAN',
@@ -430,7 +421,7 @@ class MainScreenState extends State<MainScreen> {
       9,
       'FWC',
       19,
-      "Museu",
+      "Museu Fim",
       stickers,
       CountryFlag.fromCountryCode('AX', theme: mainTheme),
     );
@@ -446,24 +437,18 @@ class MainScreenState extends State<MainScreen> {
     CountryFlag flag,
   ) {
     int n = firstNumber;
-    List<Sticker> tempSection = [];
     while (n <= sectionSize) {
       Sticker sticker = Sticker(
         section: name,
         ammount: 0,
         number: n.toString(),
-        countryName: countryName,
+        sectionName: countryName,
         flag: flag,
       );
 
       stickers.add(sticker);
-      tempSection.add(sticker);
       n++;
     }
-
-    widget.sections!.add(
-      CountrySection(cards: tempSection, flag: flag, name: name),
-    );
   }
 
   @override
@@ -495,10 +480,8 @@ class MainScreenState extends State<MainScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CollectionScreen(
-                        collection: widget.collection!,
-                        sections: widget.sections!,
-                      ),
+                      builder: (context) =>
+                          CollectionScreen(collection: widget.collection!),
                     ),
                   );
                 },

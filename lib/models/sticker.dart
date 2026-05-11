@@ -4,14 +4,14 @@ class Sticker {
   final String number;
   final String section;
   int ammount;
-  String countryName;
+  String sectionName;
   CountryFlag? flag;
 
   Sticker({
   required this.section,
   required this.ammount,
   required this.number,
-  required this.countryName,
+  required this.sectionName,
   this.flag
   }); 
 }

@@ -1,23 +1,38 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/render_entities/countrySection.dart';
 
+enum Filters { all, missing, repeated, alphabetical }
+
+/* 
+Main principle:
+
+O widget NAO pode receber uma lista composta por outros widgets,
+recebe apenas DADOS
+
+Ele ira criar os widgets internamente
+
+Collection Screen
+Filtros sao aplicados na lista de stickers como um todo
+Monta as sessoes com base na lista total de stickers
+
+Sequencia logica SEMPRE:
+Stickers -> Filtra -> Monta Sections para exibir
+*/
+
 class CollectionScreen extends StatefulWidget {
+  //List os stickers:
   final List<Sticker> collection;
-  final List<CountrySection> sections;
   List<Sticker>? currentSelection;
-  List<CountrySection>? currentSections;
-  int filter = 1;
+  late Map<String, List<CountrySection>> sectionsMap;
+  Filters filter = Filters.all;
   bool allBtnSelected = false;
   bool remainingBtnSelected = false;
   bool toChangeBtnSelected = false;
   bool sortByAlphaBtnSelected = false;
-  CollectionScreen({
-    super.key,
-    required this.collection,
-    required this.sections,
-  });
+  CollectionScreen({super.key, required this.collection});
 
   @override
   State<StatefulWidget> createState() {
@@ -26,42 +41,21 @@ class CollectionScreen extends StatefulWidget {
 }
 
 class CollectionScreenState extends State<CollectionScreen> {
-  void setSectionFilter(int filter) {
+  void setFilter(Filters filter) {
     setState(() {
       widget.filter = filter;
 
-      if (filter == 1) {
-        widget.currentSections = widget.sections;
-      } else if (filter == 2) {
-        widget.currentSections = [];
-        for (var section in widget.sections) {
-          var filteredCards = section.cards
-              .where((e) => e.ammount == 0)
-              .toList();
-
-          if (filteredCards.isNotEmpty) {
-            widget.currentSections!.add(section);
-          }
-        }
-      }
-    });
-  }
-
-  void setFilter(int filter) {
-    setState(() {
-      widget.filter = filter;
-
-      if (filter == 1) {
-        widget.currentSelection = List.from(widget.sections);
-      } else if (filter == 2) {
+      if (filter == Filters.all) {
+        widget.currentSelection = List.from(widget.collection);
+      } else if (filter == Filters.missing) {
         widget.currentSelection = widget.collection
             .where((e) => e.ammount == 0)
             .toList();
-      } else if (filter == 3) {
+      } else if (filter == Filters.repeated) {
         widget.currentSelection = widget.collection
             .where((e) => e.ammount > 1)
             .toList();
-      } else if (filter == 4) {
+      } else if (filter == Filters.alphabetical) {
         widget.currentSelection = List.from(widget.currentSelection!)
           ..sort((a, b) {
             int result = a.section.compareTo(b.section);
@@ -71,6 +65,7 @@ class CollectionScreenState extends State<CollectionScreen> {
             return result;
           });
       }
+      createSections();
     });
   }
 
@@ -105,12 +100,36 @@ class CollectionScreenState extends State<CollectionScreen> {
     });
   }
 
-  void createSections() {}
+  void createSections() {
+    Map<String, String> addedSections = <String, String>{};
+    widget.sectionsMap = <String, List<CountrySection>>{};
+
+    for (var sticker in widget.currentSelection!) {
+      if (!addedSections.containsKey(sticker.sectionName)) {
+        widget.sectionsMap[sticker.sectionName] = [];
+
+        var stickersOfThisSection = widget.collection.where(
+          (e) => e.sectionName == sticker.sectionName,
+        );
+
+        widget.sectionsMap[sticker.sectionName]!.add(
+          CountrySection(
+            cards: stickersOfThisSection.toList(),
+            flag: sticker.flag!,
+            name: sticker.section,
+          ),
+        );
+        addedSections[sticker.sectionName] = sticker.section;
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    widget.currentSections = widget.sections;
+    widget.currentSelection = widget.collection;
+    widget.sectionsMap = <String, List<CountrySection>>{};
+    createSections();
   }
 
   @override
@@ -119,7 +138,15 @@ class CollectionScreenState extends State<CollectionScreen> {
       bottom: true,
       child: Column(
         children: [
-          Expanded(child: ListView(children: [...widget.currentSections!])),
+          Expanded(
+            child: ListView(
+              children: [
+                ...widget.sectionsMap.values
+                    .expand((section) => section)
+                    .toList(),
+              ],
+            ),
+          ),
           Container(
             color: const Color.fromARGB(255, 201, 201, 201),
             padding: const EdgeInsets.only(bottom: 20.0),
@@ -128,7 +155,7 @@ class CollectionScreenState extends State<CollectionScreen> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    setSectionFilter(1);
+                    setFilter(Filters.all);
                     setSelectedBtn(1);
                   },
                   style: ElevatedButton.styleFrom(
@@ -147,7 +174,7 @@ class CollectionScreenState extends State<CollectionScreen> {
 
                 ElevatedButton(
                   onPressed: () {
-                    setSectionFilter(2);
+                    setFilter(Filters.missing);
                     setSelectedBtn(2);
                   },
                   style: ElevatedButton.styleFrom(
@@ -171,7 +198,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                   ),
                   onPressed: () {
                     widget.collection.where((e) => e.ammount > 1).isNotEmpty
-                        ? setFilter(3)
+                        ? setFilter(Filters.repeated)
                         : null;
                     setSelectedBtn(3);
                   },
@@ -190,7 +217,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                         : Colors.blue,
                   ),
                   onPressed: () {
-                    setFilter(4);
+                    setFilter(Filters.alphabetical);
                     setSelectedBtn(4);
                   },
                   child: Column(
