@@ -25,13 +25,7 @@ Stickers -> Filtra -> Monta Sections para exibir
 class CollectionScreen extends StatefulWidget {
   //List os stickers:
   final List<Sticker> collection;
-  List<Sticker>? currentSelection;
-  late Map<String, List<CountrySection>> sectionsMap;
-  Filters filter = Filters.all;
-  bool allBtnSelected = false;
-  bool remainingBtnSelected = false;
-  bool toChangeBtnSelected = false;
-  bool sortByAlphaBtnSelected = false;
+  final TextEditingController _controller = TextEditingController();
   CollectionScreen({super.key, required this.collection});
 
   @override
@@ -41,22 +35,30 @@ class CollectionScreen extends StatefulWidget {
 }
 
 class CollectionScreenState extends State<CollectionScreen> {
+  List<Sticker>? currentSelection;
+  late Map<String, List<CountrySection>> sectionsMap;
+  Filters filter = Filters.all;
+  bool allBtnSelected = false;
+  bool remainingBtnSelected = false;
+  bool toChangeBtnSelected = false;
+  bool sortByAlphaBtnSelected = false;
+
   void setFilter(Filters filter) {
     setState(() {
-      widget.filter = filter;
+      this.filter = filter;
 
       if (filter == Filters.all) {
-        widget.currentSelection = List.from(widget.collection);
+        currentSelection = List.from(widget.collection);
       } else if (filter == Filters.missing) {
-        widget.currentSelection = widget.collection
+        currentSelection = widget.collection
             .where((e) => e.ammount == 0)
             .toList();
       } else if (filter == Filters.repeated) {
-        widget.currentSelection = widget.collection
+        currentSelection = widget.collection
             .where((e) => e.ammount > 1)
             .toList();
       } else if (filter == Filters.alphabetical) {
-        widget.currentSelection = List.from(widget.currentSelection!)
+        currentSelection = List.from(currentSelection!)
           ..sort((a, b) {
             int result = a.section.compareTo(b.section);
             if (result == 0) {
@@ -65,54 +67,82 @@ class CollectionScreenState extends State<CollectionScreen> {
             return result;
           });
       }
-      createSections();
     });
   }
 
-  void setSelectedBtn(int btn) {
+  void search(String input) {
+    if (input.isEmpty) {
+      setFilter(Filters.all);
+    } else {
+      setState(() {
+        currentSelection = currentSelection!
+            .where(
+              (item) =>
+                  item.section.toLowerCase().contains(input.toLowerCase()),
+            )
+            .toList();
+      });
+    }
+  }
+
+  void tryAddSticker(String input) {
+    if (input.length >= 4) {
+      setState(() {
+        for(var s in widget.collection) {
+          String stickerId = "${s.section.toLowerCase()}${s.number.toLowerCase()}";
+
+          if (input.toLowerCase() == stickerId) {
+            s.ammount ++;
+          }
+        }
+      });
+    }
+  }
+
+  void setSelectedBtn(Filters filter) {
     setState(() {
-      if (btn == 1) {
-        widget.allBtnSelected = true;
-        widget.remainingBtnSelected = false;
-        widget.toChangeBtnSelected = false;
-        widget.sortByAlphaBtnSelected = false;
+      if (filter == Filters.all) {
+        allBtnSelected = true;
+        remainingBtnSelected = false;
+        toChangeBtnSelected = false;
+        sortByAlphaBtnSelected = false;
       }
 
-      if (btn == 2) {
-        widget.allBtnSelected = false;
-        widget.remainingBtnSelected = true;
-        widget.toChangeBtnSelected = false;
-        widget.sortByAlphaBtnSelected = false;
+      if (filter == Filters.missing) {
+        allBtnSelected = false;
+        remainingBtnSelected = true;
+        toChangeBtnSelected = false;
+        sortByAlphaBtnSelected = false;
       }
-      if (btn == 3) {
-        widget.allBtnSelected = false;
-        widget.remainingBtnSelected = false;
-        widget.toChangeBtnSelected = true;
-        widget.sortByAlphaBtnSelected = false;
+      if (filter == Filters.repeated) {
+        allBtnSelected = false;
+        remainingBtnSelected = false;
+        toChangeBtnSelected = true;
+        sortByAlphaBtnSelected = false;
       }
 
-      if (btn == 4) {
-        widget.allBtnSelected = false;
-        widget.remainingBtnSelected = false;
-        widget.toChangeBtnSelected = false;
-        widget.sortByAlphaBtnSelected = true;
+      if (filter == Filters.alphabetical) {
+        allBtnSelected = false;
+        remainingBtnSelected = false;
+        toChangeBtnSelected = false;
+        sortByAlphaBtnSelected = true;
       }
     });
   }
 
   void createSections() {
     Map<String, String> addedSections = <String, String>{};
-    widget.sectionsMap = <String, List<CountrySection>>{};
+    sectionsMap = <String, List<CountrySection>>{};
 
-    for (var sticker in widget.currentSelection!) {
+    for (var sticker in currentSelection!) {
       if (!addedSections.containsKey(sticker.sectionName)) {
-        widget.sectionsMap[sticker.sectionName] = [];
+        sectionsMap[sticker.sectionName] = [];
 
-        var stickersOfThisSection = widget.currentSelection!.where(
+        var stickersOfThisSection = currentSelection!.where(
           (e) => e.sectionName == sticker.sectionName,
         );
 
-        widget.sectionsMap[sticker.sectionName]!.add(
+        sectionsMap[sticker.sectionName]!.add(
           CountrySection(
             cards: stickersOfThisSection.toList(),
             flag: sticker.flag!,
@@ -127,23 +157,31 @@ class CollectionScreenState extends State<CollectionScreen> {
   @override
   void initState() {
     super.initState();
-    widget.currentSelection = widget.collection;
-    widget.sectionsMap = <String, List<CountrySection>>{};
+    currentSelection = widget.collection;
+    sectionsMap = <String, List<CountrySection>>{};
     createSections();
   }
 
   @override
   Widget build(BuildContext context) {
+    createSections();
     return SafeArea(
-      bottom: true,
       child: Column(
         children: [
+          SearchBar(
+            hintText: 'Search items...',
+            onChanged: (value) => search(value),
+            leading: const Icon(Icons.search),
+          ),
+          Row(children: [
+             TextField(
+            controller: widget._controller),
+            ElevatedButton(onPressed: tryAddSticker(widget._controller.text), child: Text('Add sticker...'))
+          ],),
           Expanded(
             child: ListView(
               children: [
-                ...widget.sectionsMap.values
-                    .expand((section) => section)
-                    .toList(),
+                ...sectionsMap.values.expand((section) => section).toList(),
               ],
             ),
           ),
@@ -151,20 +189,20 @@ class CollectionScreenState extends State<CollectionScreen> {
             color: const Color.fromARGB(255, 201, 201, 201),
             padding: const EdgeInsets.only(bottom: 20.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: () {
                     setFilter(Filters.all);
-                    setSelectedBtn(1);
+                    setSelectedBtn(Filters.all);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.allBtnSelected
+                    backgroundColor: allBtnSelected
                         ? Colors.lightGreen
                         : Colors.blue,
                   ),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Icon(Icons.play_circle_fill_rounded),
                       Text('Todas', style: TextStyle(fontSize: 8)),
@@ -175,15 +213,15 @@ class CollectionScreenState extends State<CollectionScreen> {
                 ElevatedButton(
                   onPressed: () {
                     setFilter(Filters.missing);
-                    setSelectedBtn(2);
+                    setSelectedBtn(Filters.missing);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.remainingBtnSelected
+                    backgroundColor: remainingBtnSelected
                         ? Colors.lightGreen
                         : Colors.blue,
                   ),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Icon(Icons.play_circle_outline),
                       Text('Faltando', style: TextStyle(fontSize: 8)),
@@ -192,18 +230,16 @@ class CollectionScreenState extends State<CollectionScreen> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.toChangeBtnSelected
+                    backgroundColor: toChangeBtnSelected
                         ? Colors.lightGreen
                         : Colors.blue,
                   ),
                   onPressed: () {
-                    widget.collection.where((e) => e.ammount > 1).isNotEmpty
-                        ? setFilter(Filters.repeated)
-                        : null;
-                    setSelectedBtn(3);
+                    setFilter(Filters.repeated);
+                    setSelectedBtn(Filters.repeated);
                   },
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Icon(Icons.layers_rounded),
                       Text('Repetidas', style: TextStyle(fontSize: 8)),
@@ -212,16 +248,16 @@ class CollectionScreenState extends State<CollectionScreen> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.sortByAlphaBtnSelected
+                    backgroundColor: sortByAlphaBtnSelected
                         ? Colors.lightGreen
                         : Colors.blue,
                   ),
                   onPressed: () {
                     setFilter(Filters.alphabetical);
-                    setSelectedBtn(4);
+                    setSelectedBtn(Filters.alphabetical);
                   },
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Icon(Icons.sort_by_alpha),
                       Text('', style: TextStyle(fontSize: 1)),

@@ -26,7 +26,9 @@ class CountrySectionState extends State<CountrySection> {
 Widget build(BuildContext context) {
   return Material(
     child: ExpansionTile(
+      initiallyExpanded: true,
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           widget.flag,
           SizedBox(width: 4),
@@ -34,14 +36,18 @@ Widget build(BuildContext context) {
         ],
       ),
       children: [
-        Row(
+        Wrap(
+          direction: Axis.horizontal,
+          alignment: WrapAlignment.start,
+          spacing: 1.0,
+          runSpacing: 2.0,
           children: widget.cards
               .map((s) => CardRow(
                     key: ValueKey(s.number),
                     sticker: s,
                   ))
               .toList(),
-        ),
+        )
       ],
     ),
   );
