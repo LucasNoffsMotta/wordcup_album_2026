@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wordcup_album_2026/backend/shared_preferences.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 
 class CardRow extends StatefulWidget {
@@ -12,9 +13,10 @@ class CardRow extends StatefulWidget {
 }
 
 class CardRowState extends State<CardRow> {
-  void incrementStickerCount() {
+  Future<void> incrementStickerCount() async {
     setState(() {
       widget.sticker!.ammount += 1;
+      SharedPrefs.instance.setInt(widget.sticker!.section + widget.sticker!.number, widget.sticker!.ammount);
     });
   }
 
@@ -22,6 +24,7 @@ class CardRowState extends State<CardRow> {
     setState(() {
       if (widget.sticker!.ammount >= 1) {
         widget.sticker!.ammount -= 1;
+        SharedPrefs.instance.setInt(widget.sticker!.section + widget.sticker!.number, widget.sticker!.ammount);
       }
     });
   }
@@ -66,7 +69,7 @@ class CardRowState extends State<CardRow> {
                 Text(
                   widget.sticker!.number.toString(),
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:wordcup_album_2026/backend/shared_preferences.dart';
 import 'package:wordcup_album_2026/core/theme/app_theme.dart';
 import 'package:wordcup_album_2026/screens/main_screen.dart';
 
-void main() {
+void main() async {
+   WidgetsFlutterBinding.ensureInitialized();
+   await SharedPrefs.init();
   runApp(const MainApp());
 }
 

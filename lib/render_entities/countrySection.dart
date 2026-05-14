@@ -4,10 +4,10 @@ import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/render_entities/cardRow.dart';
 
 class CountrySection extends StatefulWidget {
-  List<Sticker> cards;
+  final List<Sticker> cards;
   final CountryFlag flag;
   final String name;
-  CountrySection({
+  const CountrySection({
     super.key,
     required this.cards,
     required this.flag,

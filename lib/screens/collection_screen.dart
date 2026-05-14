@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/render_entities/countrySection.dart';
 
-enum Filters { all, missing, repeated, alphabetical }
+enum Filters { all, missing, repeated, alphabeticalOrder }
 
 /* 
 Main principle:
@@ -25,7 +25,6 @@ Stickers -> Filtra -> Monta Sections para exibir
 class CollectionScreen extends StatefulWidget {
   //List os stickers:
   final List<Sticker> collection;
-  final TextEditingController _controller = TextEditingController();
   CollectionScreen({super.key, required this.collection});
 
   @override
@@ -57,7 +56,7 @@ class CollectionScreenState extends State<CollectionScreen> {
         currentSelection = widget.collection
             .where((e) => e.ammount > 1)
             .toList();
-      } else if (filter == Filters.alphabetical) {
+      } else if (filter == Filters.alphabeticalOrder) {
         currentSelection = List.from(currentSelection!)
           ..sort((a, b) {
             int result = a.section.compareTo(b.section);
@@ -88,11 +87,12 @@ class CollectionScreenState extends State<CollectionScreen> {
   void tryAddSticker(String input) {
     if (input.length >= 4) {
       setState(() {
-        for(var s in widget.collection) {
-          String stickerId = "${s.section.toLowerCase()}${s.number.toLowerCase()}";
+        for (var s in widget.collection) {
+          String stickerId =
+              "${s.section.toLowerCase()}${s.number.toLowerCase()}";
 
           if (input.toLowerCase() == stickerId) {
-            s.ammount ++;
+            s.ammount++;
           }
         }
       });
@@ -121,7 +121,7 @@ class CollectionScreenState extends State<CollectionScreen> {
         sortByAlphaBtnSelected = false;
       }
 
-      if (filter == Filters.alphabetical) {
+      if (filter == Filters.alphabeticalOrder) {
         allBtnSelected = false;
         remainingBtnSelected = false;
         toChangeBtnSelected = false;
@@ -173,11 +173,14 @@ class CollectionScreenState extends State<CollectionScreen> {
             onChanged: (value) => search(value),
             leading: const Icon(Icons.search),
           ),
-          Row(children: [
-             TextField(
-            controller: widget._controller),
-            ElevatedButton(onPressed: tryAddSticker(widget._controller.text), child: Text('Add sticker...'))
-          ],),
+          Row(
+            children: [
+              SearchBar(
+                hintText: 'Add sticker...',
+                onChanged: (value) => tryAddSticker(value),
+              ),
+            ],
+          ),
           Expanded(
             child: ListView(
               children: [
@@ -190,78 +193,87 @@ class CollectionScreenState extends State<CollectionScreen> {
             padding: const EdgeInsets.only(bottom: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 15,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setFilter(Filters.all);
-                    setSelectedBtn(Filters.all);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: allBtnSelected
-                        ? Colors.lightGreen
-                        : Colors.blue,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(Icons.play_circle_fill_rounded),
-                      Text('Todas', style: TextStyle(fontSize: 8)),
-                    ],
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setFilter(Filters.all);
+                      setSelectedBtn(Filters.all);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: allBtnSelected
+                          ? Colors.lightGreen
+                          : Colors.blue,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(Icons.play_circle_fill_rounded),
+                        Text('Todas', style: TextStyle(fontSize: 12)),
+                      ],
+                    ),
                   ),
                 ),
 
-                ElevatedButton(
-                  onPressed: () {
-                    setFilter(Filters.missing);
-                    setSelectedBtn(Filters.missing);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: remainingBtnSelected
-                        ? Colors.lightGreen
-                        : Colors.blue,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(Icons.play_circle_outline),
-                      Text('Faltando', style: TextStyle(fontSize: 8)),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: toChangeBtnSelected
-                        ? Colors.lightGreen
-                        : Colors.blue,
-                  ),
-                  onPressed: () {
-                    setFilter(Filters.repeated);
-                    setSelectedBtn(Filters.repeated);
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(Icons.layers_rounded),
-                      Text('Repetidas', style: TextStyle(fontSize: 8)),
-                    ],
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setFilter(Filters.missing);
+                      setSelectedBtn(Filters.missing);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: remainingBtnSelected
+                          ? Colors.lightGreen
+                          : Colors.blue,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(Icons.play_circle_outline),
+                        Text('Faltando', style: TextStyle(fontSize: 12)),
+                      ],
+                    ),
                   ),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: sortByAlphaBtnSelected
-                        ? Colors.lightGreen
-                        : Colors.blue,
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: toChangeBtnSelected
+                          ? Colors.lightGreen
+                          : Colors.blue,
+                    ),
+                    onPressed: () {
+                      setFilter(Filters.repeated);
+                      setSelectedBtn(Filters.repeated);
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(Icons.layers_rounded),
+                        Text('Repetidas', style: TextStyle(fontSize: 12)),
+                      ],
+                    ),
                   ),
-                  onPressed: () {
-                    setFilter(Filters.alphabetical);
-                    setSelectedBtn(Filters.alphabetical);
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(Icons.sort_by_alpha),
-                      Text('', style: TextStyle(fontSize: 1)),
-                    ],
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: sortByAlphaBtnSelected
+                          ? Colors.lightGreen
+                          : Colors.blue,
+                    ),
+                    onPressed: () {
+                      setFilter(Filters.alphabeticalOrder);
+                      setSelectedBtn(Filters.alphabeticalOrder);
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(Icons.sort_by_alpha),
+                        Text('Ordem Alfabetica', style: TextStyle(fontSize: 12)),
+                      ],
+                    ),
                   ),
                 ),
               ],
