@@ -85,8 +85,7 @@ class CollectionScreenState extends State<CollectionScreen> {
   }
 
   void tryAddSticker(String input) {
-
-
+    final snackBar = SnackBar(content: const Text('Adicionado com sucesso!'));
     if (input.length >= 4) {
       setState(() {
         for (var s in widget.collection) {
@@ -95,14 +94,12 @@ class CollectionScreenState extends State<CollectionScreen> {
 
           if (input.toLowerCase() == stickerId) {
             s.ammount++;
-                final snackBar = SnackBar(
-                  content: Text("$stickerId adicionado com sucesso!"),
-                );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         }
       });
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void setSelectedBtn(Filters filter) {
@@ -175,6 +172,7 @@ class CollectionScreenState extends State<CollectionScreen> {
       child: Column(
         children: [
           SearchBar(
+            hintText: "Search...",
             onChanged: (value) => search(value),
             leading: const Icon(Icons.search),
           ),
@@ -188,9 +186,7 @@ class CollectionScreenState extends State<CollectionScreen> {
           ),
           Expanded(
             child: ListView(
-              children: [
-                ...sectionsMap.values.expand((section) => section),
-              ],
+              children: [...sectionsMap.values.expand((section) => section)],
             ),
           ),
           Container(
@@ -207,6 +203,10 @@ class CollectionScreenState extends State<CollectionScreen> {
                       setSelectedBtn(Filters.all);
                     },
                     style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.grey,
+                      elevation: 10,
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(24),
                       backgroundColor: allBtnSelected
                           ? Colors.lightGreen
                           : Colors.blue,
@@ -215,7 +215,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Icon(Icons.play_circle_fill_rounded),
-                        Text('Todas', style: TextStyle(fontSize: 9)),
+                        Text('Todas', style: TextStyle(fontSize: 8)),
                       ],
                     ),
                   ),
@@ -228,6 +228,10 @@ class CollectionScreenState extends State<CollectionScreen> {
                       setSelectedBtn(Filters.missing);
                     },
                     style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.grey,
+                      elevation: 10,
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(24),
                       backgroundColor: remainingBtnSelected
                           ? Colors.lightGreen
                           : Colors.blue,
@@ -236,7 +240,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Icon(Icons.play_circle_outline),
-                        Text('Faltando', style: TextStyle(fontSize: 9)),
+                        Text('Faltando', style: TextStyle(fontSize: 8)),
                       ],
                     ),
                   ),
@@ -244,6 +248,10 @@ class CollectionScreenState extends State<CollectionScreen> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.grey,
+                      elevation: 10,
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(24),
                       backgroundColor: toChangeBtnSelected
                           ? Colors.lightGreen
                           : Colors.blue,
@@ -256,7 +264,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Icon(Icons.layers_rounded),
-                        Text('Repetidas', style: TextStyle(fontSize: 9)),
+                        Text('Repetidas', style: TextStyle(fontSize: 8)),
                       ],
                     ),
                   ),
@@ -264,6 +272,10 @@ class CollectionScreenState extends State<CollectionScreen> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.grey,
+                      elevation: 10,
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(24),
                       backgroundColor: sortByAlphaBtnSelected
                           ? Colors.lightGreen
                           : Colors.blue,
@@ -276,7 +288,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Icon(Icons.sort_by_alpha),
-                        Text('Ordenar', style: TextStyle(fontSize: 9)),
+                        Text('Ordenar', style: TextStyle(fontSize: 8)),
                       ],
                     ),
                   ),
