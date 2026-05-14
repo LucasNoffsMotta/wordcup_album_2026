@@ -8,7 +8,6 @@ import 'package:wordcup_album_2026/screens/collection_screen.dart';
 class MainScreen extends StatefulWidget {
   MainScreen({super.key});
 
-
   @override
   State<StatefulWidget> createState() {
     return MainScreenState();
@@ -17,9 +16,8 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   List<Sticker>? collection;
-  
-  
-  List<Sticker> createNewCollection()  {
+
+  List<Sticker> createNewCollection() {
     List<Sticker> stickers = [];
     const ImageTheme mainTheme = ImageTheme(
       shape: Circle(),
@@ -27,13 +25,14 @@ class MainScreenState extends State<MainScreen> {
       height: 20,
     );
 
-     insertTeamSection(
+    insertTeamSection(
       0,
       'FWC',
       8,
       "Museu Inicio",
       stickers,
       CountryFlag.fromCountryCode('AX', theme: mainTheme),
+      '🏛️',
     );
 
     insertTeamSection(
@@ -43,7 +42,9 @@ class MainScreenState extends State<MainScreen> {
       "México",
       stickers,
       CountryFlag.fromCountryCode('MEX', theme: mainTheme),
+      '🇲🇽',
     );
+
     insertTeamSection(
       1,
       'RSA',
@@ -51,7 +52,9 @@ class MainScreenState extends State<MainScreen> {
       "África do Sul",
       stickers,
       CountryFlag.fromCountryCode('ZAF', theme: mainTheme),
+      '🇿🇦',
     );
+
     insertTeamSection(
       1,
       'KOR',
@@ -59,7 +62,9 @@ class MainScreenState extends State<MainScreen> {
       "Coreia do Sul",
       stickers,
       CountryFlag.fromCountryCode('KOR', theme: mainTheme),
+      '🇰🇷',
     );
+
     insertTeamSection(
       1,
       'CZE',
@@ -67,7 +72,9 @@ class MainScreenState extends State<MainScreen> {
       "República Tcheca",
       stickers,
       CountryFlag.fromCountryCode('CZE', theme: mainTheme),
+      '🇨🇿',
     );
+
     insertTeamSection(
       1,
       'CAN',
@@ -75,7 +82,9 @@ class MainScreenState extends State<MainScreen> {
       "Canadá",
       stickers,
       CountryFlag.fromCountryCode('CAN', theme: mainTheme),
+      '🇨🇦',
     );
+
     insertTeamSection(
       1,
       'BIH',
@@ -83,7 +92,9 @@ class MainScreenState extends State<MainScreen> {
       "Bósnia e Herzegovina",
       stickers,
       CountryFlag.fromCountryCode('BIH', theme: mainTheme),
+      '🇧🇦',
     );
+
     insertTeamSection(
       1,
       'QAT',
@@ -91,7 +102,9 @@ class MainScreenState extends State<MainScreen> {
       "Catar",
       stickers,
       CountryFlag.fromCountryCode('QAT', theme: mainTheme),
+      '🇶🇦',
     );
+
     insertTeamSection(
       1,
       'SUI',
@@ -99,7 +112,9 @@ class MainScreenState extends State<MainScreen> {
       "Suíça",
       stickers,
       CountryFlag.fromCountryCode('CHE', theme: mainTheme),
+      '🇨🇭',
     );
+
     insertTeamSection(
       1,
       'BRA',
@@ -107,7 +122,9 @@ class MainScreenState extends State<MainScreen> {
       "Brasil",
       stickers,
       CountryFlag.fromCountryCode('BRA', theme: mainTheme),
+      '🇧🇷',
     );
+
     insertTeamSection(
       1,
       'MAR',
@@ -115,7 +132,9 @@ class MainScreenState extends State<MainScreen> {
       "Marrocos",
       stickers,
       CountryFlag.fromCountryCode('MAR', theme: mainTheme),
+      '🇲🇦',
     );
+
     insertTeamSection(
       1,
       'HAI',
@@ -123,7 +142,9 @@ class MainScreenState extends State<MainScreen> {
       "Haiti",
       stickers,
       CountryFlag.fromCountryCode('HTI', theme: mainTheme),
+      '🇭🇹',
     );
+
     insertTeamSection(
       1,
       'SCO',
@@ -131,7 +152,9 @@ class MainScreenState extends State<MainScreen> {
       "Escócia",
       stickers,
       CountryFlag.fromCountryCode('GB', theme: mainTheme),
+      '🏴',
     );
+
     insertTeamSection(
       1,
       'USA',
@@ -139,7 +162,9 @@ class MainScreenState extends State<MainScreen> {
       "Estados Unidos",
       stickers,
       CountryFlag.fromCountryCode('USA', theme: mainTheme),
+      '🇺🇸',
     );
+
     insertTeamSection(
       1,
       'PAR',
@@ -147,7 +172,9 @@ class MainScreenState extends State<MainScreen> {
       "Paraguai",
       stickers,
       CountryFlag.fromCountryCode('PRY', theme: mainTheme),
+      '🇵🇾',
     );
+
     insertTeamSection(
       1,
       'AUS',
@@ -155,7 +182,9 @@ class MainScreenState extends State<MainScreen> {
       "Austrália",
       stickers,
       CountryFlag.fromCountryCode('AUS', theme: mainTheme),
+      '🇦🇺',
     );
+
     insertTeamSection(
       1,
       'TUR',
@@ -163,7 +192,9 @@ class MainScreenState extends State<MainScreen> {
       "Turquia",
       stickers,
       CountryFlag.fromCountryCode('TUR', theme: mainTheme),
+      '🇹🇷',
     );
+
     insertTeamSection(
       1,
       'GER',
@@ -171,7 +202,9 @@ class MainScreenState extends State<MainScreen> {
       "Alemanha",
       stickers,
       CountryFlag.fromCountryCode('DEU', theme: mainTheme),
+      '🇩🇪',
     );
+
     insertTeamSection(
       1,
       'CUW',
@@ -179,7 +212,9 @@ class MainScreenState extends State<MainScreen> {
       "Curaçao",
       stickers,
       CountryFlag.fromCountryCode('CUW', theme: mainTheme),
+      '🇨🇼',
     );
+
     insertTeamSection(
       1,
       'CIV',
@@ -187,7 +222,9 @@ class MainScreenState extends State<MainScreen> {
       "Costa do Marfim",
       stickers,
       CountryFlag.fromCountryCode('CIV', theme: mainTheme),
+      '🇨🇮',
     );
+
     insertTeamSection(
       1,
       'ECU',
@@ -195,7 +232,9 @@ class MainScreenState extends State<MainScreen> {
       "Equador",
       stickers,
       CountryFlag.fromCountryCode('ECU', theme: mainTheme),
+      '🇪🇨',
     );
+
     insertTeamSection(
       1,
       'NED',
@@ -203,7 +242,9 @@ class MainScreenState extends State<MainScreen> {
       "Países Baixos",
       stickers,
       CountryFlag.fromCountryCode('NLD', theme: mainTheme),
+      '🇳🇱',
     );
+
     insertTeamSection(
       1,
       'JPN',
@@ -211,7 +252,9 @@ class MainScreenState extends State<MainScreen> {
       "Japão",
       stickers,
       CountryFlag.fromCountryCode('JPN', theme: mainTheme),
+      '🇯🇵',
     );
+
     insertTeamSection(
       1,
       'SWE',
@@ -219,7 +262,9 @@ class MainScreenState extends State<MainScreen> {
       "Suécia",
       stickers,
       CountryFlag.fromCountryCode('SWE', theme: mainTheme),
+      '🇸🇪',
     );
+
     insertTeamSection(
       1,
       'TUN',
@@ -227,7 +272,9 @@ class MainScreenState extends State<MainScreen> {
       "Tunísia",
       stickers,
       CountryFlag.fromCountryCode('TUN', theme: mainTheme),
+      '🇹🇳',
     );
+
     insertTeamSection(
       1,
       'BEL',
@@ -235,7 +282,9 @@ class MainScreenState extends State<MainScreen> {
       "Bélgica",
       stickers,
       CountryFlag.fromCountryCode('BEL', theme: mainTheme),
+      '🇧🇪',
     );
+
     insertTeamSection(
       1,
       'EGY',
@@ -243,7 +292,9 @@ class MainScreenState extends State<MainScreen> {
       "Egito",
       stickers,
       CountryFlag.fromCountryCode('EGY', theme: mainTheme),
+      '🇪🇬',
     );
+
     insertTeamSection(
       1,
       'IRN',
@@ -251,7 +302,9 @@ class MainScreenState extends State<MainScreen> {
       "Irã",
       stickers,
       CountryFlag.fromCountryCode('IRN', theme: mainTheme),
+      '🇮🇷',
     );
+
     insertTeamSection(
       1,
       'NZL',
@@ -259,7 +312,9 @@ class MainScreenState extends State<MainScreen> {
       "Nova Zelândia",
       stickers,
       CountryFlag.fromCountryCode('NZL', theme: mainTheme),
+      '🇳🇿',
     );
+
     insertTeamSection(
       1,
       'ESP',
@@ -267,7 +322,9 @@ class MainScreenState extends State<MainScreen> {
       "Espanha",
       stickers,
       CountryFlag.fromCountryCode('ESP', theme: mainTheme),
+      '🇪🇸',
     );
+
     insertTeamSection(
       1,
       'CPV',
@@ -275,7 +332,9 @@ class MainScreenState extends State<MainScreen> {
       "Cabo Verde",
       stickers,
       CountryFlag.fromCountryCode('CPV', theme: mainTheme),
+      '🇨🇻',
     );
+
     insertTeamSection(
       1,
       'KSA',
@@ -283,7 +342,9 @@ class MainScreenState extends State<MainScreen> {
       "Arábia Saudita",
       stickers,
       CountryFlag.fromCountryCode('SAU', theme: mainTheme),
+      '🇸🇦',
     );
+
     insertTeamSection(
       1,
       'URU',
@@ -291,7 +352,9 @@ class MainScreenState extends State<MainScreen> {
       "Uruguai",
       stickers,
       CountryFlag.fromCountryCode('URY', theme: mainTheme),
+      '🇺🇾',
     );
+
     insertTeamSection(
       1,
       'FRA',
@@ -299,6 +362,7 @@ class MainScreenState extends State<MainScreen> {
       "França",
       stickers,
       CountryFlag.fromCountryCode('FRA', theme: mainTheme),
+      '🇫🇷',
     );
 
     insertTeamSection(
@@ -308,7 +372,9 @@ class MainScreenState extends State<MainScreen> {
       "Senegal",
       stickers,
       CountryFlag.fromCountryCode('SEN', theme: mainTheme),
+      '🇸🇳',
     );
+
     insertTeamSection(
       1,
       'IRQ',
@@ -316,7 +382,9 @@ class MainScreenState extends State<MainScreen> {
       "Iraque",
       stickers,
       CountryFlag.fromCountryCode('IRQ', theme: mainTheme),
+      '🇮🇶',
     );
+
     insertTeamSection(
       1,
       'NOR',
@@ -324,7 +392,9 @@ class MainScreenState extends State<MainScreen> {
       "Noruega",
       stickers,
       CountryFlag.fromCountryCode('NOR', theme: mainTheme),
+      '🇳🇴',
     );
+
     insertTeamSection(
       1,
       'ARG',
@@ -332,7 +402,9 @@ class MainScreenState extends State<MainScreen> {
       "Argentina",
       stickers,
       CountryFlag.fromCountryCode('ARG', theme: mainTheme),
+      '🇦🇷',
     );
+
     insertTeamSection(
       1,
       'ALG',
@@ -340,7 +412,9 @@ class MainScreenState extends State<MainScreen> {
       "Argélia",
       stickers,
       CountryFlag.fromCountryCode('DZA', theme: mainTheme),
+      '🇩🇿',
     );
+
     insertTeamSection(
       1,
       'AUT',
@@ -348,7 +422,9 @@ class MainScreenState extends State<MainScreen> {
       "Áustria",
       stickers,
       CountryFlag.fromCountryCode('AUT', theme: mainTheme),
+      '🇦🇹',
     );
+
     insertTeamSection(
       1,
       'JOR',
@@ -356,7 +432,9 @@ class MainScreenState extends State<MainScreen> {
       "Jordânia",
       stickers,
       CountryFlag.fromCountryCode('JOR', theme: mainTheme),
+      '🇯🇴',
     );
+
     insertTeamSection(
       1,
       'POR',
@@ -364,7 +442,9 @@ class MainScreenState extends State<MainScreen> {
       "Portugal",
       stickers,
       CountryFlag.fromCountryCode('PRT', theme: mainTheme),
+      '🇵🇹',
     );
+
     insertTeamSection(
       1,
       'USB',
@@ -372,7 +452,9 @@ class MainScreenState extends State<MainScreen> {
       "Uzbequistão",
       stickers,
       CountryFlag.fromCountryCode('UZB', theme: mainTheme),
+      '🇺🇿',
     );
+
     insertTeamSection(
       1,
       'COL',
@@ -380,7 +462,9 @@ class MainScreenState extends State<MainScreen> {
       "Colômbia",
       stickers,
       CountryFlag.fromCountryCode('COL', theme: mainTheme),
+      '🇨🇴',
     );
+
     insertTeamSection(
       1,
       'ENG',
@@ -388,7 +472,9 @@ class MainScreenState extends State<MainScreen> {
       "Inglaterra",
       stickers,
       CountryFlag.fromCountryCode('GB', theme: mainTheme),
+      '🏴',
     );
+
     insertTeamSection(
       1,
       'CRO',
@@ -396,7 +482,9 @@ class MainScreenState extends State<MainScreen> {
       "Croácia",
       stickers,
       CountryFlag.fromCountryCode('HRV', theme: mainTheme),
+      '🇭🇷',
     );
+
     insertTeamSection(
       1,
       'GHA',
@@ -404,6 +492,7 @@ class MainScreenState extends State<MainScreen> {
       "Gana",
       stickers,
       CountryFlag.fromCountryCode('GHA', theme: mainTheme),
+      '🇬🇭',
     );
 
     insertTeamSection(
@@ -413,7 +502,9 @@ class MainScreenState extends State<MainScreen> {
       "Panamá",
       stickers,
       CountryFlag.fromCountryCode('PAN', theme: mainTheme),
+      '🇵🇦',
     );
+
     insertTeamSection(
       9,
       'FWC',
@@ -421,17 +512,19 @@ class MainScreenState extends State<MainScreen> {
       "Museu Fim",
       stickers,
       CountryFlag.fromCountryCode('AX', theme: mainTheme),
+      '🏛️',
     );
     return stickers;
   }
 
-  Future<void> insertTeamSection (
+  Future<void> insertTeamSection(
     int firstNumber,
     String name,
     int sectionSize,
     String countryName,
     List<Sticker> stickers,
     CountryFlag flag,
+    String flagEmoji,
   ) async {
     int n = firstNumber;
     while (n <= sectionSize) {
@@ -441,14 +534,13 @@ class MainScreenState extends State<MainScreen> {
         number: n.toString(),
         sectionName: countryName,
         flag: flag,
+        flagEmoji: flagEmoji,
       );
 
       stickers.add(sticker);
       n++;
     }
   }
-
-
 
   @override
   void initState() {

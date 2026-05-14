@@ -6,12 +6,14 @@ class Sticker {
   int ammount;
   String sectionName;
   CountryFlag? flag;
+  String? flagEmoji;
 
   Sticker({
   required this.section,
   required this.ammount,
   required this.number,
   required this.sectionName,
-  this.flag
+  this.flag,
+  this.flagEmoji
   }); 
 }

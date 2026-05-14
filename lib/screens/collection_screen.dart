@@ -85,6 +85,8 @@ class CollectionScreenState extends State<CollectionScreen> {
   }
 
   void tryAddSticker(String input) {
+
+
     if (input.length >= 4) {
       setState(() {
         for (var s in widget.collection) {
@@ -93,6 +95,10 @@ class CollectionScreenState extends State<CollectionScreen> {
 
           if (input.toLowerCase() == stickerId) {
             s.ammount++;
+                final snackBar = SnackBar(
+                  content: Text("$stickerId adicionado com sucesso!"),
+                );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         }
       });
@@ -169,22 +175,21 @@ class CollectionScreenState extends State<CollectionScreen> {
       child: Column(
         children: [
           SearchBar(
-            hintText: 'Search items...',
             onChanged: (value) => search(value),
             leading: const Icon(Icons.search),
           ),
-          Row(
-            children: [
-              SearchBar(
-                hintText: 'Add sticker...',
-                onChanged: (value) => tryAddSticker(value),
-              ),
-            ],
+          SearchBar(
+            hintText: 'Add sticker',
+            leading: const Icon(Icons.add_box_outlined),
+            onChanged: (value) =>
+                Future.delayed(const Duration(seconds: 2), () {
+                  tryAddSticker(value);
+                }),
           ),
           Expanded(
             child: ListView(
               children: [
-                ...sectionsMap.values.expand((section) => section).toList(),
+                ...sectionsMap.values.expand((section) => section),
               ],
             ),
           ),
@@ -210,7 +215,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Icon(Icons.play_circle_fill_rounded),
-                        Text('Todas', style: TextStyle(fontSize: 12)),
+                        Text('Todas', style: TextStyle(fontSize: 9)),
                       ],
                     ),
                   ),
@@ -231,7 +236,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Icon(Icons.play_circle_outline),
-                        Text('Faltando', style: TextStyle(fontSize: 12)),
+                        Text('Faltando', style: TextStyle(fontSize: 9)),
                       ],
                     ),
                   ),
@@ -251,7 +256,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Icon(Icons.layers_rounded),
-                        Text('Repetidas', style: TextStyle(fontSize: 12)),
+                        Text('Repetidas', style: TextStyle(fontSize: 9)),
                       ],
                     ),
                   ),
@@ -271,7 +276,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Icon(Icons.sort_by_alpha),
-                        Text('Ordem Alfabetica', style: TextStyle(fontSize: 12)),
+                        Text('Ordenar', style: TextStyle(fontSize: 9)),
                       ],
                     ),
                   ),
