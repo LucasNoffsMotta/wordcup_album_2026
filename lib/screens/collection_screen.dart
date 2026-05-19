@@ -133,6 +133,8 @@ class CollectionScreenState extends State<CollectionScreen> {
     });
   }
 
+  void expo
+
   void createSections() {
     Map<String, String> addedSections = <String, String>{};
     sectionsMap = <String, List<CountrySection>>{};
@@ -183,6 +185,37 @@ class CollectionScreenState extends State<CollectionScreen> {
                 Future.delayed(const Duration(seconds: 2), () {
                   tryAddSticker(value);
                 }),
+          ),
+          Container(
+            color: const Color.fromARGB(255, 201, 201, 201),
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.grey,
+                      elevation: 10,
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(24),
+                    ),
+                    onPressed: () {
+                      ///Callback para exportar aqui
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(Icons.import_export),
+                        Text(
+                          'Exportar faltando',
+                          style: TextStyle(fontSize: 8),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: ListView(
@@ -265,30 +298,6 @@ class CollectionScreenState extends State<CollectionScreen> {
                       children: [
                         Icon(Icons.layers_rounded),
                         Text('Repetidas', style: TextStyle(fontSize: 8)),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.grey,
-                      elevation: 10,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(24),
-                      backgroundColor: sortByAlphaBtnSelected
-                          ? Colors.lightGreen
-                          : Colors.blue,
-                    ),
-                    onPressed: () {
-                      setFilter(Filters.alphabeticalOrder);
-                      setSelectedBtn(Filters.alphabeticalOrder);
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Icon(Icons.sort_by_alpha),
-                        Text('Ordenar', style: TextStyle(fontSize: 8)),
                       ],
                     ),
                   ),
