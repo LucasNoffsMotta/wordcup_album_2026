@@ -1,8 +1,8 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/render_entities/countrySection.dart';
+import 'package:wordcup_album_2026/screens/export_options_screen.dart';
+import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 
 enum Filters { all, missing, repeated, alphabeticalOrder }
 
@@ -25,7 +25,7 @@ Stickers -> Filtra -> Monta Sections para exibir
 class CollectionScreen extends StatefulWidget {
   //List os stickers:
   final List<Sticker> collection;
-  CollectionScreen({super.key, required this.collection});
+  const CollectionScreen({super.key, required this.collection});
 
   @override
   State<StatefulWidget> createState() {
@@ -98,7 +98,6 @@ class CollectionScreenState extends State<CollectionScreen> {
         }
       });
     }
-
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -132,8 +131,6 @@ class CollectionScreenState extends State<CollectionScreen> {
       }
     });
   }
-
-  void expo
 
   void createSections() {
     Map<String, String> addedSections = <String, String>{};
@@ -185,37 +182,6 @@ class CollectionScreenState extends State<CollectionScreen> {
                 Future.delayed(const Duration(seconds: 2), () {
                   tryAddSticker(value);
                 }),
-          ),
-          Container(
-            color: const Color.fromARGB(255, 201, 201, 201),
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.grey,
-                      elevation: 10,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(24),
-                    ),
-                    onPressed: () {
-                      ///Callback para exportar aqui
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Icon(Icons.import_export),
-                        Text(
-                          'Exportar faltando',
-                          style: TextStyle(fontSize: 8),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
           Expanded(
             child: ListView(
@@ -298,6 +264,56 @@ class CollectionScreenState extends State<CollectionScreen> {
                       children: [
                         Icon(Icons.layers_rounded),
                         Text('Repetidas', style: TextStyle(fontSize: 8)),
+                      ],
+                    ),
+                  ),
+                ),
+                 Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.grey,
+                      elevation: 10,
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(24),
+                      backgroundColor: sortByAlphaBtnSelected 
+                          ? Colors.lightGreen
+                          : Colors.blue,
+                    ),
+                    onPressed: () {
+                      setFilter(Filters.alphabeticalOrder);
+                      setSelectedBtn(Filters.alphabeticalOrder);
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(Icons.sort_by_alpha),
+                        Text('Ordenar', style: TextStyle(fontSize: 8)),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.grey,
+                      elevation: 10,
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(24),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ExportOptionsScreen(),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(Icons.settings),
+                        Text('Opcoes', style: TextStyle(fontSize: 8)),
                       ],
                     ),
                   ),

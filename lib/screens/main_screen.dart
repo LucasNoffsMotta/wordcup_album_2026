@@ -6,7 +6,7 @@ import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/screens/collection_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  MainScreen({super.key});
+  const MainScreen({super.key});
 
   @override
   State<StatefulWidget> createState() {
