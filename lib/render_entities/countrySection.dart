@@ -26,7 +26,7 @@ class CountrySectionState extends State<CountrySection> {
 Widget build(BuildContext context) {
   return Material(
     child: ExpansionTile(
-      initiallyExpanded: true,
+      initiallyExpanded: false,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

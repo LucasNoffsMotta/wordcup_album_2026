@@ -1,8 +1,13 @@
+import 'dart:core';
+import 'dart:ffi';
+
+import 'package:collapsible_sidebar/collapsible_sidebar.dart';
+import 'package:collapsible_sidebar/collapsible_sidebar/collapsible_item.dart';
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/render_entities/countrySection.dart';
-import 'package:wordcup_album_2026/screens/export_options_screen.dart';
-import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 
 enum Filters { all, missing, repeated, alphabeticalOrder }
 
@@ -25,7 +30,7 @@ Stickers -> Filtra -> Monta Sections para exibir
 class CollectionScreen extends StatefulWidget {
   //List os stickers:
   final List<Sticker> collection;
-  const CollectionScreen({super.key, required this.collection});
+  CollectionScreen({super.key, required this.collection});
 
   @override
   State<StatefulWidget> createState() {
@@ -36,11 +41,83 @@ class CollectionScreen extends StatefulWidget {
 class CollectionScreenState extends State<CollectionScreen> {
   List<Sticker>? currentSelection;
   late Map<String, List<CountrySection>> sectionsMap;
+  late List<CollapsibleItem> _items;
   Filters filter = Filters.all;
   bool allBtnSelected = false;
   bool remainingBtnSelected = false;
   bool toChangeBtnSelected = false;
   bool sortByAlphaBtnSelected = false;
+
+  List<CollapsibleItem> get _generateItems {
+    return [
+      CollapsibleItem(
+        text: 'Todas',
+        icon: Icons.play_circle_fill_rounded,
+        onPressed: () {
+          setFilter(Filters.all);
+          setSelectedBtn(Filters.all);
+        },
+        isSelected: true,
+      ),
+
+      CollapsibleItem(
+        text: "Faltando",
+        icon: Icons.play_circle_outline,
+        onPressed: () {
+          setFilter(Filters.missing);
+          setSelectedBtn(Filters.missing);
+        },
+        isSelected: false,
+      ),
+
+      CollapsibleItem(
+        text: "Repetidas",
+        icon: Icons.layers_rounded,
+        onPressed: () {
+          setFilter(Filters.repeated);
+          setSelectedBtn(Filters.repeated);
+        },
+        isSelected: false,
+      ),
+      CollapsibleItem(
+        text: "Ordenar",
+        icon: Icons.sort_by_alpha,
+        onPressed: () {
+          setFilter(Filters.alphabeticalOrder);
+          setSelectedBtn(Filters.alphabeticalOrder);
+        },
+        isSelected: false,
+      ),
+      CollapsibleItem(
+        text: "Exportar",
+        icon: Icons.share,
+        onPressed: () {
+          SharePlus.instance.share(
+            ShareParams(text: _missingStickersExportText()),
+          );
+        },
+        isSelected: false,
+      ),
+      CollapsibleItem(
+        text: "Importar",
+        icon: Icons.import_export,
+        onPressed: () {
+          //TODO
+        },
+        isSelected: false,
+      ),
+      CollapsibleItem(
+        text: "Deletar",
+        icon: Icons.delete,
+        onPressed: () {
+          setState(() {
+            _deleteCollection();
+          });
+        },
+        isSelected: false,
+      ),
+    ];
+  }
 
   void setFilter(Filters filter) {
     setState(() {
@@ -84,6 +161,26 @@ class CollectionScreenState extends State<CollectionScreen> {
     }
   }
 
+  String _missingStickersExportText() {
+    String exportTxt = "";
+
+    for (var s in widget.collection) {
+      if (s.ammount == 0) {
+        if (!exportTxt.contains(s.flagEmoji!)) {
+          exportTxt += "\n${s.flagEmoji}\n";
+        }
+        exportTxt += " ${s.section} ${s.number}, ";
+      }
+    }
+    return exportTxt;
+  }
+
+  void _deleteCollection() {
+    for (var v in widget.collection) {
+      v.ammount = 0;
+    }
+  }
+
   void tryAddSticker(String input) {
     final snackBar = SnackBar(content: const Text('Adicionado com sucesso!'));
     if (input.length >= 4) {
@@ -94,11 +191,11 @@ class CollectionScreenState extends State<CollectionScreen> {
 
           if (input.toLowerCase() == stickerId) {
             s.ammount++;
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         }
       });
     }
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void setSelectedBtn(Filters filter) {
@@ -156,18 +253,9 @@ class CollectionScreenState extends State<CollectionScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    currentSelection = widget.collection;
-    sectionsMap = <String, List<CountrySection>>{};
-    createSections();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    createSections();
+  Widget _pageBody(BuildContext context) {
     return SafeArea(
+      bottom: true,
       child: Column(
         children: [
           SearchBar(
@@ -188,140 +276,65 @@ class CollectionScreenState extends State<CollectionScreen> {
               children: [...sectionsMap.values.expand((section) => section)],
             ),
           ),
-          Container(
-            color: const Color.fromARGB(255, 201, 201, 201),
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 15,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setFilter(Filters.all);
-                      setSelectedBtn(Filters.all);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.grey,
-                      elevation: 10,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(24),
-                      backgroundColor: allBtnSelected
-                          ? Colors.lightGreen
-                          : Colors.blue,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Icon(Icons.play_circle_fill_rounded),
-                        Text('Todas', style: TextStyle(fontSize: 8)),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setFilter(Filters.missing);
-                      setSelectedBtn(Filters.missing);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.grey,
-                      elevation: 10,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(24),
-                      backgroundColor: remainingBtnSelected
-                          ? Colors.lightGreen
-                          : Colors.blue,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Icon(Icons.play_circle_outline),
-                        Text('Faltando', style: TextStyle(fontSize: 8)),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.grey,
-                      elevation: 10,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(24),
-                      backgroundColor: toChangeBtnSelected
-                          ? Colors.lightGreen
-                          : Colors.blue,
-                    ),
-                    onPressed: () {
-                      setFilter(Filters.repeated);
-                      setSelectedBtn(Filters.repeated);
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Icon(Icons.layers_rounded),
-                        Text('Repetidas', style: TextStyle(fontSize: 8)),
-                      ],
-                    ),
-                  ),
-                ),
-                 Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.grey,
-                      elevation: 10,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(24),
-                      backgroundColor: sortByAlphaBtnSelected 
-                          ? Colors.lightGreen
-                          : Colors.blue,
-                    ),
-                    onPressed: () {
-                      setFilter(Filters.alphabeticalOrder);
-                      setSelectedBtn(Filters.alphabeticalOrder);
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Icon(Icons.sort_by_alpha),
-                        Text('Ordenar', style: TextStyle(fontSize: 8)),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.grey,
-                      elevation: 10,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(24),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ExportOptionsScreen(),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Icon(Icons.settings),
-                        Text('Opcoes', style: TextStyle(fontSize: 8)),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    currentSelection = widget.collection;
+    _items = _generateItems;
+    sectionsMap = <String, List<CountrySection>>{};
+    createSections();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    createSections();
+    return Scaffold(
+      body: SafeArea(
+        bottom: true,
+        child: CollapsibleSidebar(
+          items: _items,
+          toggleTitle: "",
+          title: "WC2026",
+          onHoverPointer: SystemMouseCursors.click,
+          toggleButtonIcon: Icons.arrow_circle_right_outlined,
+          titleBackIcon: Icons.arrow_circle_left_outlined,
+          collapseOnBodyTap: true,
+          minWidth: 80,
+          borderRadius: 25,
+          selectedIconBox: const Color.fromRGBO(0, 212, 198, 1),
+          unselectedIconColor: const Color.fromRGBO(82, 100, 122, 1),
+          selectedTextColor: Color.fromRGBO(45, 63, 84, 1),
+          selectedIconColor: Color.fromRGBO(0, 76, 148, 1),
+          body: _pageBody(context),
+          duration: Duration(milliseconds: 2000),
+          showTitle: false,
+          textStyle: TextStyle(
+            fontSize: 22,
+            color: const Color.fromARGB(255, 201, 255, 52),
+            fontStyle: FontStyle.italic,
+          ),
+          titleStyle: TextStyle(
+            fontSize: 20,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+          toggleTitleStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          sidebarBoxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(29, 189, 142, 1),
+              blurRadius: 15,
+              blurStyle: BlurStyle.outer,
+            ),
+          ],
+        ),
       ),
     );
   }
