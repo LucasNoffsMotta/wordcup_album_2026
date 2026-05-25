@@ -47,6 +47,47 @@ class CollectionScreenState extends State<CollectionScreen> {
   bool remainingBtnSelected = false;
   bool toChangeBtnSelected = false;
   bool sortByAlphaBtnSelected = false;
+  final TextEditingController _textFieldController = TextEditingController();
+
+  @override
+  void dispose() {
+    _textFieldController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _displayImportDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Importar coleção'),
+          content: TextField(
+            controller: _textFieldController,
+            decoration: const InputDecoration(
+              hintText:
+                  "Digite as figurinhas separadas por uma `,`, ex: FWC1, FWC2",
+            ),
+            autofocus: true, // Automatically opens keyboard
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () => Navigator.pop(context),
+            ),
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                tryAddCollectionByString(
+                  _textFieldController.text,
+                ); // Process input
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   List<CollapsibleItem> get _generateItems {
     return [
@@ -69,7 +110,6 @@ class CollectionScreenState extends State<CollectionScreen> {
         },
         isSelected: false,
       ),
-
       CollapsibleItem(
         text: "Repetidas",
         icon: Icons.layers_rounded,
@@ -92,9 +132,7 @@ class CollectionScreenState extends State<CollectionScreen> {
         text: "Exportar",
         icon: Icons.share,
         onPressed: () {
-          SharePlus.instance.share(
-            ShareParams(text: _missingStickersExportText()),
-          );
+          SharePlus.instance.share(ShareParams(text: _exportTxt()));
         },
         isSelected: false,
       ),
@@ -102,7 +140,7 @@ class CollectionScreenState extends State<CollectionScreen> {
         text: "Importar",
         icon: Icons.import_export,
         onPressed: () {
-          //TODO
+          _displayImportDialog(context);
         },
         isSelected: false,
       ),
@@ -110,9 +148,7 @@ class CollectionScreenState extends State<CollectionScreen> {
         text: "Deletar",
         icon: Icons.delete,
         onPressed: () {
-          setState(() {
-            _deleteCollection();
-          });
+          _deleteCollectionDialog();
         },
         isSelected: false,
       ),
@@ -146,6 +182,39 @@ class CollectionScreenState extends State<CollectionScreen> {
     });
   }
 
+  void _deleteCollectionDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Atenção",
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+          ),
+          content: Text(
+            "Deseja reiniciar a colecão do zero?",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Cancelar"),
+            ),
+            TextButton(
+              child: Text("Ok"),
+              onPressed: () {
+                setState(() {
+                  _deleteCollection();
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void search(String input) {
     if (input.isEmpty) {
       setFilter(Filters.all);
@@ -161,16 +230,13 @@ class CollectionScreenState extends State<CollectionScreen> {
     }
   }
 
-  String _missingStickersExportText() {
+  String _exportTxt() {
     String exportTxt = "";
-
-    for (var s in widget.collection) {
-      if (s.ammount == 0) {
-        if (!exportTxt.contains(s.flagEmoji!)) {
-          exportTxt += "\n${s.flagEmoji}\n";
-        }
-        exportTxt += " ${s.section} ${s.number}, ";
+    for (var s in currentSelection!) {
+      if (!exportTxt.contains(s.flagEmoji!)) {
+        exportTxt += "\n${s.flagEmoji}\n";
       }
+      exportTxt += " ${s.section} ${s.number}, ";
     }
     return exportTxt;
   }
@@ -181,19 +247,30 @@ class CollectionScreenState extends State<CollectionScreen> {
     }
   }
 
-  void tryAddSticker(String input) {
+  //TODO: Improve the complexity time on this (on2)!
+  void tryAddCollectionByString(String input) {
     final snackBar = SnackBar(content: const Text('Adicionado com sucesso!'));
+
     if (input.length >= 4) {
+      input.toLowerCase();
+      var splitPieces = input.split(",");
+
+      for (var piece in splitPieces) {
+        piece.trim();
+      }
+
       setState(() {
         for (var s in widget.collection) {
           String stickerId =
               "${s.section.toLowerCase()}${s.number.toLowerCase()}";
 
-          if (input.toLowerCase() == stickerId) {
-            s.ammount++;
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          for (var piece in splitPieces) {
+            if (piece == stickerId) {
+              s.ammount++;
+            }
           }
         }
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       });
     }
   }
@@ -262,14 +339,6 @@ class CollectionScreenState extends State<CollectionScreen> {
             hintText: "Search...",
             onChanged: (value) => search(value),
             leading: const Icon(Icons.search),
-          ),
-          SearchBar(
-            hintText: 'Add sticker',
-            leading: const Icon(Icons.add_box_outlined),
-            onChanged: (value) =>
-                Future.delayed(const Duration(seconds: 2), () {
-                  tryAddSticker(value);
-                }),
           ),
           Expanded(
             child: ListView(
