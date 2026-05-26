@@ -77,7 +77,7 @@ class CardRowState extends State<CardRow> {
                 const SizedBox(height: 1),
                 Text(
                   '${widget.sticker!.ammount}',
-                  style: const TextStyle(fontSize: 9, color: Colors.black),
+                  style: const TextStyle(fontSize: 13, color: Colors.black),
                 ),
               ],
             ),

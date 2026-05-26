@@ -1,9 +1,6 @@
 import 'dart:core';
-import 'dart:ffi';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
-import 'package:collapsible_sidebar/collapsible_sidebar/collapsible_item.dart';
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
@@ -30,6 +27,7 @@ Stickers -> Filtra -> Monta Sections para exibir
 class CollectionScreen extends StatefulWidget {
   //List os stickers:
   final List<Sticker> collection;
+  late Map<String, Sticker> collectionMap;
   CollectionScreen({super.key, required this.collection});
 
   @override
@@ -60,12 +58,11 @@ class CollectionScreenState extends State<CollectionScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Importar coleção'),
+          title: const Text('Importar por texto'),
           content: TextField(
             controller: _textFieldController,
             decoration: const InputDecoration(
-              hintText:
-                  "Digite as figurinhas separadas por uma `,`, ex: FWC1, FWC2",
+              hintText: "Formato exemplo: FWC1, FWC2, FWC3, MEX1",
             ),
             autofocus: true, // Automatically opens keyboard
           ),
@@ -245,32 +242,36 @@ class CollectionScreenState extends State<CollectionScreen> {
     for (var v in widget.collection) {
       v.ammount = 0;
     }
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Figurinhas zeradas com sucesso!")));
   }
 
   //TODO: Improve the complexity time on this (on2)!
   void tryAddCollectionByString(String input) {
-    final snackBar = SnackBar(content: const Text('Adicionado com sucesso!'));
+    bool added = false;
 
     if (input.length >= 4) {
-      input.toLowerCase();
-      var splitPieces = input.split(",");
+      var toLower = input.toLowerCase();
+      var splitPieces = toLower.split(",");
 
-      for (var piece in splitPieces) {
-        piece.trim();
-      }
+      List<String> trimmedList = splitPieces.map((str) => str.trim()).toList();
 
       setState(() {
-        for (var s in widget.collection) {
-          String stickerId =
-              "${s.section.toLowerCase()}${s.number.toLowerCase()}";
-
-          for (var piece in splitPieces) {
-            if (piece == stickerId) {
-              s.ammount++;
-            }
+        for (var piece in trimmedList) {
+          if (widget.collectionMap.containsKey(piece)) {
+            added = true;
+            widget.collectionMap[piece]!.ammount++;
           }
         }
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+        String snackBarContent = added
+            ? "Adicionado com sucesso!"
+            : "Nenhum match encontrado";
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(snackBarContent)));
       });
     }
   }
@@ -356,6 +357,10 @@ class CollectionScreenState extends State<CollectionScreen> {
     currentSelection = widget.collection;
     _items = _generateItems;
     sectionsMap = <String, List<CountrySection>>{};
+    widget.collectionMap = {
+      for (var e in widget.collection)
+        e.section.toLowerCase() + e.number.toLowerCase(): e,
+    };
     createSections();
   }
 
