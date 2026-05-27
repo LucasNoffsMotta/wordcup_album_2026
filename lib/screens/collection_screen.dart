@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/render_entities/countrySection.dart';
+import 'package:wordcup_album_2026/screens/export_options_screen.dart';
 
 enum Filters { all, missing, repeated, alphabeticalOrder }
+
+enum Screens { collection, export, statistic }
 
 /* 
 Main principle:
@@ -37,13 +40,16 @@ class CollectionScreen extends StatefulWidget {
 
 class CollectionScreenState extends State<CollectionScreen> {
   List<Sticker>? currentSelection;
-  late Map<String, List<CountrySection>> sectionsMap;
+  Map<String, List<CountrySection>> sectionsMap =
+      <String, List<CountrySection>>{};
   late List<CollapsibleItem> _items;
   Filters filter = Filters.all;
+  Screens screen = Screens.collection;
   bool allBtnSelected = false;
   bool remainingBtnSelected = false;
   bool toChangeBtnSelected = false;
   bool sortByAlphaBtnSelected = false;
+  late Widget collectionScreen;
   late Map<String, Sticker> collectionMap;
   final TextEditingController _textFieldController = TextEditingController();
 
@@ -138,6 +144,16 @@ class CollectionScreenState extends State<CollectionScreen> {
         icon: Icons.import_export,
         onPressed: () {
           _displayImportDialog(context);
+        },
+        isSelected: false,
+      ),
+      CollapsibleItem(
+        text: "Exportar New",
+        icon: Icons.share,
+        onPressed: () {
+          setState(() {
+            screen = Screens.export;
+          });
         },
         isSelected: false,
       ),
@@ -330,7 +346,12 @@ class CollectionScreenState extends State<CollectionScreen> {
     }
   }
 
-  Widget _pageBody(BuildContext context) {
+  Widget getExportScreen() {
+    ExportOptionsScreen s = ExportOptionsScreen();
+    return s.build(context);
+  }
+
+  Widget getCollectionScreenBody() {
     return SafeArea(
       bottom: true,
       child: Column(
@@ -350,10 +371,25 @@ class CollectionScreenState extends State<CollectionScreen> {
     );
   }
 
+  Widget _setPageBody(BuildContext context) {
+    Widget? current;
+    switch (screen) {
+      case Screens.collection:
+        current = getCollectionScreenBody();
+        break;
+      case Screens.export:
+        current = getExportScreen();
+      default:
+        current = getCollectionScreenBody();
+    }
+    return current;
+  }
+
   @override
   void initState() {
     super.initState();
     currentSelection = widget.collection;
+    collectionScreen = getCollectionScreenBody();
     _items = _generateItems;
     sectionsMap = <String, List<CountrySection>>{};
     collectionMap = {
@@ -383,7 +419,7 @@ class CollectionScreenState extends State<CollectionScreen> {
           unselectedIconColor: const Color.fromRGBO(82, 100, 122, 1),
           selectedTextColor: Color.fromRGBO(45, 63, 84, 1),
           selectedIconColor: Color.fromRGBO(0, 76, 148, 1),
-          body: _pageBody(context),
+          body: _setPageBody(context),
           duration: Duration(milliseconds: 2000),
           showTitle: false,
           textStyle: TextStyle(
