@@ -170,6 +170,7 @@ class CollectionScreenState extends State<CollectionScreen> {
 
   void setFilter(Filters filter) {
     setState(() {
+      screen = Screens.collection;
       this.filter = filter;
 
       if (filter == Filters.all) {
