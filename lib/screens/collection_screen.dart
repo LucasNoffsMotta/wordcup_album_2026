@@ -27,7 +27,6 @@ Stickers -> Filtra -> Monta Sections para exibir
 class CollectionScreen extends StatefulWidget {
   //List os stickers:
   final List<Sticker> collection;
-  late Map<String, Sticker> collectionMap;
   CollectionScreen({super.key, required this.collection});
 
   @override
@@ -45,6 +44,7 @@ class CollectionScreenState extends State<CollectionScreen> {
   bool remainingBtnSelected = false;
   bool toChangeBtnSelected = false;
   bool sortByAlphaBtnSelected = false;
+  late Map<String, Sticker> collectionMap;
   final TextEditingController _textFieldController = TextEditingController();
 
   @override
@@ -248,7 +248,6 @@ class CollectionScreenState extends State<CollectionScreen> {
     ).showSnackBar(SnackBar(content: Text("Figurinhas zeradas com sucesso!")));
   }
 
-  //TODO: Improve the complexity time on this (on2)!
   void tryAddCollectionByString(String input) {
     bool added = false;
 
@@ -260,9 +259,9 @@ class CollectionScreenState extends State<CollectionScreen> {
 
       setState(() {
         for (var piece in trimmedList) {
-          if (widget.collectionMap.containsKey(piece)) {
+          if (collectionMap.containsKey(piece)) {
             added = true;
-            widget.collectionMap[piece]!.ammount++;
+            collectionMap[piece]!.ammount++;
           }
         }
 
@@ -357,7 +356,7 @@ class CollectionScreenState extends State<CollectionScreen> {
     currentSelection = widget.collection;
     _items = _generateItems;
     sectionsMap = <String, List<CountrySection>>{};
-    widget.collectionMap = {
+    collectionMap = {
       for (var e in widget.collection)
         e.section.toLowerCase() + e.number.toLowerCase(): e,
     };
