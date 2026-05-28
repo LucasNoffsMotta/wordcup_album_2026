@@ -70,7 +70,7 @@ class CollectionScreenState extends State<CollectionScreen> {
             decoration: const InputDecoration(
               hintText: "Formato exemplo: FWC1, FWC2, FWC3, MEX1",
             ),
-            autofocus: true, // Automatically opens keyboard
+            autofocus: true,
           ),
           actions: <Widget>[
             TextButton(
@@ -132,14 +132,6 @@ class CollectionScreenState extends State<CollectionScreen> {
         isSelected: false,
       ),
       CollapsibleItem(
-        text: "Exportar",
-        icon: Icons.share,
-        onPressed: () {
-          SharePlus.instance.share(ShareParams(text: _exportTxt()));
-        },
-        isSelected: false,
-      ),
-      CollapsibleItem(
         text: "Importar",
         icon: Icons.import_export,
         onPressed: () {
@@ -148,7 +140,7 @@ class CollectionScreenState extends State<CollectionScreen> {
         isSelected: false,
       ),
       CollapsibleItem(
-        text: "Exportar New",
+        text: "Compartilhar",
         icon: Icons.share,
         onPressed: () {
           setState(() {
@@ -244,13 +236,20 @@ class CollectionScreenState extends State<CollectionScreen> {
     }
   }
 
-  String _exportTxt() {
+  String _exportTxt(Filters filter) {
     String exportTxt = "";
-    for (var s in currentSelection!) {
-      if (!exportTxt.contains(s.flagEmoji!)) {
-        exportTxt += "\n${s.flagEmoji}\n";
+    for (var s in widget.collection) {
+      if (filter == Filters.missing && s.ammount == 0) {
+        if (!exportTxt.contains(s.flagEmoji!)) {
+          exportTxt += "\n${s.flagEmoji}\n";
+        }
+        exportTxt += " ${s.section} ${s.number}, ";
+      } else if (filter == Filters.repeated && s.ammount > 1) {
+        if (!exportTxt.contains(s.flagEmoji!)) {
+          exportTxt += "\n${s.flagEmoji}\n";
+        }
+        exportTxt += " ${s.section} ${s.number}, ";
       }
-      exportTxt += " ${s.section} ${s.number}, ";
     }
     return exportTxt;
   }
@@ -348,8 +347,58 @@ class CollectionScreenState extends State<CollectionScreen> {
   }
 
   Widget getExportScreen() {
-    ExportOptionsScreen s = ExportOptionsScreen();
-    return s.build(context);
+    return Material(
+      surfaceTintColor: Colors.blueGrey,
+      child: Wrap(
+        direction: Axis.horizontal,
+        alignment: WrapAlignment.start,
+        spacing: 1.0,
+        runSpacing: 2.0,
+        children: [
+          Column(
+            spacing: 100,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 40,
+                width: 250,
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(width: 2.0),
+                    backgroundColor: Colors.blueGrey,
+                  ),
+                  label: Text("Repetidas"),
+                  onPressed: () {
+                    SharePlus.instance.share(
+                      ShareParams(text: _exportTxt(Filters.repeated)),
+                    );
+                  },
+                  icon: Icon(Icons.share_outlined),
+                ),
+              ),
+              SizedBox(
+                width: 250,
+                height: 40,
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(width: 2.0),
+                    backgroundColor: Colors.blueGrey,
+                  ),
+                  label: Text("Faltando"),
+                  onPressed: () {
+                    SharePlus.instance.share(
+                      ShareParams(text: _exportTxt(Filters.missing)),
+                    );
+                  },
+                  icon: Icon(Icons.share_rounded),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget getCollectionScreenBody() {

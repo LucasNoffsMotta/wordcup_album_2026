@@ -42,7 +42,7 @@ Widget build(BuildContext context) {
           spacing: 1.0,
           runSpacing: 2.0,
           children: widget.cards
-              .map((s) => CardRow(
+              .map((s) => CardCell(
                     key: ValueKey(s.number),
                     sticker: s,
                   ))

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:wordcup_album_2026/backend/shared_preferences.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 
-class CardRow extends StatefulWidget {
+class CardCell extends StatefulWidget {
   final Sticker? sticker;
-  const CardRow({super.key, required Sticker this.sticker});
+  const CardCell({super.key, required Sticker this.sticker});
 
   @override
   State<StatefulWidget> createState() {
-    return CardRowState();
+    return CardCellState();
   }
 }
 
-class CardRowState extends State<CardRow> {
+class CardCellState extends State<CardCell> {
   Future<void> incrementStickerCount() async {
     setState(() {
       widget.sticker!.ammount += 1;
