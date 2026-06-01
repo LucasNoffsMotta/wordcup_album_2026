@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/render_entities/countrySection.dart';
-import 'package:wordcup_album_2026/screens/export_options_screen.dart';
 
 enum Filters { all, missing, repeated, alphabeticalOrder }
 
@@ -49,6 +48,8 @@ class CollectionScreenState extends State<CollectionScreen> {
   bool remainingBtnSelected = false;
   bool toChangeBtnSelected = false;
   bool sortByAlphaBtnSelected = false;
+  double screenWidth = 0;
+  double screenHeight = 0;
   late Widget collectionScreen;
   late Map<String, Sticker> collectionMap;
   final TextEditingController _textFieldController = TextEditingController();
@@ -132,15 +133,7 @@ class CollectionScreenState extends State<CollectionScreen> {
         isSelected: false,
       ),
       CollapsibleItem(
-        text: "Importar",
-        icon: Icons.import_export,
-        onPressed: () {
-          _displayImportDialog(context);
-        },
-        isSelected: false,
-      ),
-      CollapsibleItem(
-        text: "Compartilhar",
+        text: "Exportar",
         icon: Icons.share,
         onPressed: () {
           setState(() {
@@ -347,57 +340,84 @@ class CollectionScreenState extends State<CollectionScreen> {
   }
 
   Widget getExportScreen() {
-    return Material(
-      surfaceTintColor: Colors.blueGrey,
-      child: Wrap(
-        direction: Axis.horizontal,
-        alignment: WrapAlignment.start,
-        spacing: 1.0,
-        runSpacing: 2.0,
-        children: [
-          Column(
-            spacing: 100,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 40,
-                width: 250,
-                child: OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(width: 2.0),
-                    backgroundColor: Colors.blueGrey,
+    return Wrap(
+      direction: Axis.vertical,
+      alignment: WrapAlignment.center,
+      spacing: 1.0,
+      runSpacing: 2.0,
+      children: [
+        Column(
+          spacing: 100,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: screenWidth / 6),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(width: 2.0),
+                      backgroundColor: Colors.blueGrey,
+                    ),
+                    label: Text("Repetidas", style: TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      SharePlus.instance.share(
+                        ShareParams(text: _exportTxt(Filters.repeated)),
+                      );
+                    },
+                    icon: Icon(Icons.share_outlined),
                   ),
-                  label: Text("Repetidas"),
-                  onPressed: () {
-                    SharePlus.instance.share(
-                      ShareParams(text: _exportTxt(Filters.repeated)),
-                    );
-                  },
-                  icon: Icon(Icons.share_outlined),
-                ),
+                ],
               ),
-              SizedBox(
-                width: 250,
-                height: 40,
-                child: OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(width: 2.0),
-                    backgroundColor: Colors.blueGrey,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: screenWidth / 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(width: 2.0),
+                      backgroundColor: Colors.blueGrey,
+                    ),
+                    label: Text("Faltando", style: TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      SharePlus.instance.share(
+                        ShareParams(text: _exportTxt(Filters.missing)),
+                      );
+                    },
+                    icon: Icon(Icons.share_rounded),
                   ),
-                  label: Text("Faltando"),
-                  onPressed: () {
-                    SharePlus.instance.share(
-                      ShareParams(text: _exportTxt(Filters.missing)),
-                    );
-                  },
-                  icon: Icon(Icons.share_rounded),
-                ),
+                ],
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: screenWidth / 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(width: 2.0),
+                      backgroundColor: Colors.blueGrey,
+                    ),
+                    label: Text("Importar", style: TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      _displayImportDialog(context);
+                    },
+                    icon: Icon(Icons.import_export),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -438,6 +458,7 @@ class CollectionScreenState extends State<CollectionScreen> {
   @override
   void initState() {
     super.initState();
+
     currentSelection = widget.collection;
     collectionScreen = getCollectionScreenBody();
     _items = _generateItems;
@@ -452,6 +473,8 @@ class CollectionScreenState extends State<CollectionScreen> {
   @override
   Widget build(BuildContext context) {
     createSections();
+    screenWidth = MediaQuery.sizeOf(context).width;
+    screenHeight = MediaQuery.sizeOf(context).height;
     return Scaffold(
       body: SafeArea(
         bottom: true,
