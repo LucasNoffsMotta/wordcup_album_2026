@@ -13,11 +13,15 @@ class StatisticBuilderHelper {
   }
 
   static double getSpentAmmount(int totalCards) {
-    return totalCards / 7;
+    return (totalCards / cardsPerPackage) * packagePrice;
   }
 
-  static Widget getMoneySpentChart() {
-    
+  static Widget getMoneySpentChart(int totalAmmount) {
+    double moneySpent = getSpentAmmount(totalAmmount);
+
+    return Padding(padding: padding)
+
+
   }
 
   static Widget getCollectionProgressChart(
