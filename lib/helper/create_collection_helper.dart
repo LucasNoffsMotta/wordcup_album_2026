@@ -4,7 +4,6 @@ import 'package:wordcup_album_2026/models/sticker.dart';
 
 class CreateCollectionHelper{
   CreateCollectionHelper._();
-  static List<Sticker> collection = [];
 
    static List<Sticker> createNewCollection() {
     List<Sticker> stickers = [];
@@ -531,11 +530,6 @@ class CreateCollectionHelper{
     }
   }
 
-  static List<Sticker> _getCollection() {
-    if (collection.isEmpty) {
-      collection = createNewCollection();
-    }
-    return collection;
-  }
 
+  
 }

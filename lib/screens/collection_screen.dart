@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wordcup_album_2026/helper/statistic_builder_helper.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/render_entities/countrySection.dart';
 
@@ -10,26 +11,9 @@ enum Filters { all, missing, repeated, alphabeticalOrder }
 
 enum Screens { collection, export, statistic }
 
-/* 
-Main principle:
-
-O widget NAO pode receber uma lista composta por outros widgets,
-recebe apenas DADOS
-
-Ele ira criar os widgets internamente
-
-Collection Screen
-Filtros sao aplicados na lista de stickers como um todo
-Monta as sessoes com base na lista total de stickers
-
-Sequencia logica SEMPRE:
-Stickers -> Filtra -> Monta Sections para exibir
-*/
-
 class CollectionScreen extends StatefulWidget {
-  //List os stickers:
   final List<Sticker> collection;
-  CollectionScreen({super.key, required this.collection});
+  const CollectionScreen({super.key, required this.collection});
 
   @override
   State<StatefulWidget> createState() {
@@ -81,9 +65,7 @@ class CollectionScreenState extends State<CollectionScreen> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                tryAddCollectionByString(
-                  _textFieldController.text,
-                ); // Process input
+                tryAddCollectionByString(_textFieldController.text);
                 Navigator.pop(context);
               },
             ),
@@ -138,6 +120,16 @@ class CollectionScreenState extends State<CollectionScreen> {
         onPressed: () {
           setState(() {
             screen = Screens.export;
+          });
+        },
+        isSelected: false,
+      ),
+      CollapsibleItem(
+        text: "Estatistica",
+        icon: Icons.pie_chart_outline_sharp,
+        onPressed: () {
+          setState(() {
+            screen = Screens.statistic;
           });
         },
         isSelected: false,
@@ -273,15 +265,14 @@ class CollectionScreenState extends State<CollectionScreen> {
             collectionMap[piece]!.ammount++;
           }
         }
-
-        String snackBarContent = added
-            ? "Adicionado com sucesso!"
-            : "Nenhum match encontrado";
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(snackBarContent)));
       });
     }
+    String snackBarContent = added
+        ? "Adicionado com sucesso!"
+        : "Nenhum match encontrado";
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(snackBarContent)));
   }
 
   void setSelectedBtn(Filters filter) {
@@ -441,6 +432,16 @@ class CollectionScreenState extends State<CollectionScreen> {
     );
   }
 
+  Widget getStatisticScreen() {
+    int totalCards = widget.collection
+        .where((sticker) => sticker.ammount > 0)
+        .length;
+    return StatisticBuilderHelper.getSpentAmmountPercentageChart(
+      "Progresso",
+      StatisticBuilderHelper.getCompletionPercentage(totalCards),
+    );
+  }
+
   Widget _setPageBody(BuildContext context) {
     Widget? current;
     switch (screen) {
@@ -449,8 +450,10 @@ class CollectionScreenState extends State<CollectionScreen> {
         break;
       case Screens.export:
         current = getExportScreen();
-      default:
-        current = getCollectionScreenBody();
+        break;
+      case Screens.statistic:
+        current = getStatisticScreen();
+        break;
     }
     return current;
   }
