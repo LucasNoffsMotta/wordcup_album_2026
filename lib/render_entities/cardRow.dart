@@ -12,6 +12,7 @@ class CardCell extends StatefulWidget {
   }
 }
 
+//Precisa setar o SP toda vez que incrementar o valor, nao apenas quando chama OnClicked de dentro do sticker
 class CardCellState extends State<CardCell> {
   Future<void> incrementStickerCount() async {
     setState(() {

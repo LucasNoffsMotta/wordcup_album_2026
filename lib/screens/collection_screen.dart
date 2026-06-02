@@ -4,6 +4,7 @@ import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wordcup_album_2026/helper/statistic_builder_helper.dart';
+import 'package:wordcup_album_2026/models/collection_data.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/render_entities/countrySection.dart';
 
@@ -433,14 +434,30 @@ class CollectionScreenState extends State<CollectionScreen> {
   }
 
   Widget getStatisticScreen() {
-    int totalCards = widget.collection
+    int collection = widget.collection
         .where((sticker) => sticker.ammount > 0)
         .length;
-    return StatisticBuilderHelper.getCollectionProgressChart(
-      "Progresso",
-      StatisticBuilderHelper.getCompletionPercentage(totalCards),
-      screenWidth / 6
+    int totalCardsOwned = widget.collection.fold(
+      0,
+      (sum, item) => sum + item.ammount,
     );
+
+    CollectionData data = CollectionData(
+      progressionPercentage: StatisticBuilderHelper.getCompletionPercentage(
+        collection,
+      ),
+      totalCardsOwned: totalCardsOwned,
+      doubledCards: widget.collection
+          .where((sticker) => sticker.ammount > 1)
+          .length,
+      missingCards: widget.collection
+          .where((sticker) => sticker.ammount == 0)
+          .length,
+      boostersBought: StatisticBuilderHelper.getBoughtBoosters(
+        totalCardsOwned,
+      ).toInt(),
+    );
+    return StatisticBuilderHelper.getChartsScreenTable(data, screenWidth / 6);
   }
 
   Widget _setPageBody(BuildContext context) {
