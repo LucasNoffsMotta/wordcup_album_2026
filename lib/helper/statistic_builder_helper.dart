@@ -16,27 +16,42 @@ class StatisticBuilderHelper {
     return totalCards / 7;
   }
 
-  static Widget getSpentAmmountPercentageChart(
+  static Widget getMoneySpentChart() {
+    
+  }
+
+  static Widget getCollectionProgressChart(
     String title,
     double percentage,
+    double padding,
   ) {
-    return CircularPercentIndicator(
-      radius: 130.0,
-      animation: true,
-      animationDuration: 1200,
-      lineWidth: 15.0,
-      percent: percentage,
-      header: Text(
-        "Progresso",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+    return Padding(
+      padding: EdgeInsetsGeometry.only(left: padding),
+      child: Card(
+        color: Color.fromRGBO(30, 43, 57, 1),
+        shadowColor: Color.fromRGBO(52, 74, 97, 1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(25),
+        ),
+        child: CircularPercentIndicator(
+          radius: 130.0,
+          animation: true,
+          animationDuration: 1200,
+          lineWidth: 15.0,
+          percent: percentage,
+          header: Text(
+            "Progresso",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+          ),
+          center: Text(
+            "${(percentage * 100).round()}%",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+          ),
+          circularStrokeCap: CircularStrokeCap.butt,
+          backgroundColor: Color.fromRGBO(45, 63, 84, 1),
+          progressColor: const Color.fromRGBO(0, 212, 198, 1),
+        ),
       ),
-      center: Text(
-        "${(percentage * 100).round()}%",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-      ),
-      circularStrokeCap: CircularStrokeCap.butt,
-      backgroundColor: Color.fromRGBO(45, 63, 84, 1),
-      progressColor: const Color.fromRGBO(0, 212, 198, 1),
     );
   }
 }

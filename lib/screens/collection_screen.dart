@@ -436,9 +436,10 @@ class CollectionScreenState extends State<CollectionScreen> {
     int totalCards = widget.collection
         .where((sticker) => sticker.ammount > 0)
         .length;
-    return StatisticBuilderHelper.getSpentAmmountPercentageChart(
+    return StatisticBuilderHelper.getCollectionProgressChart(
       "Progresso",
       StatisticBuilderHelper.getCompletionPercentage(totalCards),
+      screenWidth / 6
     );
   }
 
