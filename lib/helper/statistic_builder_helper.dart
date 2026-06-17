@@ -26,6 +26,7 @@ class StatisticBuilderHelper {
     return Padding(
       padding: EdgeInsetsGeometry.only(left: padding / 3),
       child: Card(
+        color: Color.fromRGBO(14, 21, 27, 1),
         child: Center(
           child: Column(
             children: [
@@ -42,21 +43,95 @@ class StatisticBuilderHelper {
     double moneySpent = getSpentAmmount(data.totalCardsOwned);
 
     return Padding(
-      padding: EdgeInsetsGeometry.only(left: padding + 15),
+      padding:  EdgeInsetsGeometry.only(left: padding, right: padding),
       child: Card(
         color: Color.fromRGBO(30, 43, 57, 1),
         shadowColor: Color.fromRGBO(52, 74, 97, 1),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(25),
+          borderRadius: BorderRadiusGeometry.circular(10),
         ),
-        child: Column(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Card(child: Text("Gasto estimado: $moneySpent")),
-            Card(child: Text("Total: ${data.totalCardsOwned}")),
-            Card(child: Text("Tenho: ${data.totalCardsOwned}")),
-            Card(child: Text("Repetidas: ${data.doubledCards}")),
-            Card(child: Text("Faltando: ${data.missingCards}")),
-            Card(child: Text("Pacotinhos comprados: ${data.boostersBought}")),
+            SizedBox(width: 15),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.monetization_on_outlined,
+                  color: Color.fromRGBO(0, 255, 238, 1),
+                ),
+                Text("Gasto estimado"),
+                Text(
+                  "$moneySpent",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color.fromRGBO(0, 255, 238, 1),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 15),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.auto_stories, color: Color.fromRGBO(0, 255, 238, 1)),
+                Text("Obtidas"),
+                Text(
+                  "${data.totalCardsOwned}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color.fromRGBO(0, 255, 238, 1),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 15),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.auto_stories, color: Color.fromRGBO(0, 255, 238, 1)),
+                Text("Repetidas"),
+                Text(
+                  "${data.doubledCards}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color.fromRGBO(0, 255, 238, 1),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 15),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.auto_stories, color: Color.fromRGBO(0, 255, 238, 1)),
+                Text("Faltando"),
+                Text(
+                  "${data.missingCards}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color.fromRGBO(0, 255, 238, 1),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 15),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.auto_stories, color: Color.fromRGBO(0, 255, 238, 1)),
+                Text("Pacotes comprados"),
+                Text(
+                  "${data.boostersBought}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color.fromRGBO(0, 255, 238, 1),
+                  ),
+                ),
+              ],
+            ),
+          SizedBox(width: 15),
           ],
         ),
       ),
@@ -68,9 +143,9 @@ class StatisticBuilderHelper {
     double padding,
   ) {
     return Padding(
-      padding: EdgeInsetsGeometry.only(left: padding),
+      padding: EdgeInsetsGeometry.only(left: padding, right: padding),
       child: Card(
-        color: Color.fromRGBO(30, 43, 57, 1),
+        color: Color.fromRGBO(21, 31, 41, 1),
         shadowColor: Color.fromRGBO(52, 74, 97, 1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(25),
@@ -81,66 +156,79 @@ class StatisticBuilderHelper {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsetsGeometry.only(left: 20.0, top: 20.0),
+                  padding: EdgeInsetsGeometry.only(left: 25.0, top: 20.0),
                   child: Text(
-                    "Progresso do album",
+                    "PROGRESSO DO ALBUM",
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
+                      fontSize: 14,
                     ),
                   ),
                 ),
               ],
             ),
+            SizedBox(height: 15),
             CircularPercentIndicator(
-              radius: 80.0,
+              radius: 100.0,
               animation: true,
               animationDuration: 1200,
               lineWidth: 15.0,
               percent: data.progressionPercentage,
               center: Text(
                 "${(data.progressionPercentage * 100).round()}%",
-                style: GoogleFonts.inter(fontSize: 50, color: Colors.white),
+                style: GoogleFonts.inter(fontSize: 26, color: Colors.white),
               ),
               circularStrokeCap: CircularStrokeCap.butt,
               backgroundColor: Color.fromRGBO(45, 63, 84, 1),
               progressColor: const Color.fromRGBO(0, 212, 198, 1),
             ),
+            SizedBox(height: 15),
             Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
                   20.0,
                 ), // Adjust the radius here
               ),
-              child: RichText(
-                text: TextSpan(
-                  style: GoogleFonts.inter(),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: "Faltam",
-                      style: GoogleFonts.inter(
-                        fontSize: 17,
-                        color: Color.fromRGBO(119, 153, 192, 1),
-                      ),
+              color: Color.fromRGBO(33, 46, 61, 1),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(width: 15),
+                  RichText(
+                    text: TextSpan(
+                      style: GoogleFonts.inter(),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: "Faltam",
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: Color.fromRGBO(146, 171, 197, 1),
+                          ),
+                        ),
+                        TextSpan(
+                          text: " ${data.missingCards} ",
+                          style: GoogleFonts.inter(
+                            color: const Color.fromARGB(255, 0, 207, 214),
+                            fontSize: 14,
+                          ),
+                        ),
+                        TextSpan(
+                          text: " figurinhas para completar    ",
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: Color.fromRGBO(146, 171, 197, 1),
+                          ),
+                        ),
+                      ],
                     ),
-                    TextSpan(
-                      text: " ${data.missingCards} ",
-                      style: GoogleFonts.inter(
-                        color: const Color.fromARGB(255, 45, 233, 240),
-                        fontSize: 23,
-                      ),
-                    ),
-                    TextSpan(
-                      text: " figurinhas para completar!",
-                      style: GoogleFonts.inter(
-                        fontSize: 17,
-                        color: Color.fromRGBO(119, 153, 192, 1),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 25),
+                ],
               ),
             ),
+            SizedBox(height: 15),
           ],
         ),
       ),
