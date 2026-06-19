@@ -1,3 +1,4 @@
+import 'package:currency_formatter/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -9,6 +10,8 @@ class StatisticBuilderHelper {
   static const int totalCards = 960;
   static const double totalToFillAlbum =
       (totalCards / cardsPerPackage) * packagePrice;
+
+  static CurrencyFormat brlSettings = CurrencyFormat(symbol: "RS", code: "brl", symbolSide: SymbolSide.left, thousandSeparator: ".", decimalSeparator: ",");
 
   static double getCompletionPercentage(int current) {
     return current / totalCards;
@@ -43,7 +46,7 @@ class StatisticBuilderHelper {
     double moneySpent = getSpentAmmount(data.totalCardsOwned);
 
     return Padding(
-      padding:  EdgeInsetsGeometry.only(left: padding, right: padding),
+      padding: EdgeInsetsGeometry.only(left: padding, right: padding),
       child: Card(
         color: Color.fromRGBO(30, 43, 57, 1),
         shadowColor: Color.fromRGBO(52, 74, 97, 1),
@@ -63,7 +66,7 @@ class StatisticBuilderHelper {
                 ),
                 Text("Gasto estimado"),
                 Text(
-                  "$moneySpent",
+                  CurrencyFormatter.format(moneySpent, brlSettings, enforceDecimals: true ,decimal: 2),
                   style: TextStyle(
                     fontSize: 12,
                     color: Color.fromRGBO(0, 255, 238, 1),
@@ -72,6 +75,7 @@ class StatisticBuilderHelper {
               ],
             ),
             SizedBox(width: 15),
+            Divider(height: 10),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -90,7 +94,10 @@ class StatisticBuilderHelper {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.auto_stories, color: Color.fromRGBO(0, 255, 238, 1)),
+                Icon(
+                  Icons.analytics_outlined,
+                  color: Color.fromRGBO(0, 255, 238, 1),
+                ),
                 Text("Repetidas"),
                 Text(
                   "${data.doubledCards}",
@@ -105,7 +112,10 @@ class StatisticBuilderHelper {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.auto_stories, color: Color.fromRGBO(0, 255, 238, 1)),
+                Icon(
+                  Icons.assessment_outlined,
+                  color: Color.fromRGBO(0, 255, 238, 1),
+                ),
                 Text("Faltando"),
                 Text(
                   "${data.missingCards}",
@@ -120,7 +130,10 @@ class StatisticBuilderHelper {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.auto_stories, color: Color.fromRGBO(0, 255, 238, 1)),
+                Icon(
+                  Icons.auto_awesome_motion_outlined,
+                  color: Color.fromRGBO(0, 255, 238, 1),
+                ),
                 Text("Pacotes comprados"),
                 Text(
                   "${data.boostersBought}",
@@ -131,7 +144,7 @@ class StatisticBuilderHelper {
                 ),
               ],
             ),
-          SizedBox(width: 15),
+            SizedBox(width: 15),
           ],
         ),
       ),
