@@ -126,7 +126,7 @@ class CollectionScreenState extends State<CollectionScreen> {
         isSelected: false,
       ),
       CollapsibleItem(
-        text: "Estatistica",
+        text: "Progresso",
         icon: Icons.pie_chart_outline_sharp,
         onPressed: () {
           setState(() {

@@ -8,10 +8,18 @@ class StatisticBuilderHelper {
   static const double packagePrice = 7.0;
   static const int cardsPerPackage = 7;
   static const int totalCards = 960;
+  static const double dividerThickness = 4;
+   static const double dividerHeight = 3;
   static const double totalToFillAlbum =
       (totalCards / cardsPerPackage) * packagePrice;
 
-  static CurrencyFormat brlSettings = CurrencyFormat(symbol: "RS", code: "brl", symbolSide: SymbolSide.left, thousandSeparator: ".", decimalSeparator: ",");
+  static CurrencyFormat brlSettings = CurrencyFormat(
+    symbol: "RS",
+    code: "brl",
+    symbolSide: SymbolSide.left,
+    thousandSeparator: ".",
+    decimalSeparator: ",",
+  );
 
   static double getCompletionPercentage(int current) {
     return current / totalCards;
@@ -26,20 +34,20 @@ class StatisticBuilderHelper {
   }
 
   static Widget getChartsScreenTable(CollectionData data, double padding) {
-    return Padding(
-      padding: EdgeInsetsGeometry.only(left: padding / 3),
+    return Expanded(
       child: Card(
         color: Color.fromRGBO(14, 21, 27, 1),
         child: Center(
           child: Column(
             children: [
-              getMoneySpentChart(data, padding),
+              //getMoneySpentChart(data, padding),
               getCollectionProgressChart(data, padding),
             ],
           ),
         ),
       ),
     );
+
   }
 
   static Widget getMoneySpentChart(CollectionData data, double padding) {
@@ -53,7 +61,7 @@ class StatisticBuilderHelper {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(10),
         ),
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(width: 15),
@@ -66,7 +74,12 @@ class StatisticBuilderHelper {
                 ),
                 Text("Gasto estimado"),
                 Text(
-                  CurrencyFormatter.format(moneySpent, brlSettings, enforceDecimals: true ,decimal: 2),
+                  CurrencyFormatter.format(
+                    moneySpent,
+                    brlSettings,
+                    enforceDecimals: true,
+                    decimal: 2,
+                  ),
                   style: TextStyle(
                     fontSize: 12,
                     color: Color.fromRGBO(0, 255, 238, 1),
@@ -75,7 +88,7 @@ class StatisticBuilderHelper {
               ],
             ),
             SizedBox(width: 15),
-            Divider(height: 10),
+            Divider(height: dividerHeight, thickness: dividerThickness,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -91,6 +104,7 @@ class StatisticBuilderHelper {
               ],
             ),
             SizedBox(width: 15),
+            Divider(height: dividerHeight, thickness: dividerThickness,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -109,6 +123,7 @@ class StatisticBuilderHelper {
               ],
             ),
             SizedBox(width: 15),
+            Divider(height: dividerHeight, thickness: dividerThickness,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -127,6 +142,7 @@ class StatisticBuilderHelper {
               ],
             ),
             SizedBox(width: 15),
+            Divider(height: dividerHeight, thickness: dividerThickness,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -145,6 +161,7 @@ class StatisticBuilderHelper {
               ],
             ),
             SizedBox(width: 15),
+            Divider(height: dividerHeight, thickness: dividerThickness,),
           ],
         ),
       ),
@@ -155,8 +172,7 @@ class StatisticBuilderHelper {
     CollectionData data,
     double padding,
   ) {
-    return Padding(
-      padding: EdgeInsetsGeometry.only(left: padding, right: padding),
+    return Expanded(
       child: Card(
         color: Color.fromRGBO(21, 31, 41, 1),
         shadowColor: Color.fromRGBO(52, 74, 97, 1),
@@ -183,7 +199,7 @@ class StatisticBuilderHelper {
             ),
             SizedBox(height: 15),
             CircularPercentIndicator(
-              radius: 100.0,
+              radius: 75.0,
               animation: true,
               animationDuration: 1200,
               lineWidth: 15.0,
@@ -242,6 +258,7 @@ class StatisticBuilderHelper {
               ),
             ),
             SizedBox(height: 15),
+            getMoneySpentChart(data, padding),
           ],
         ),
       ),
