@@ -518,7 +518,8 @@ class CreateCollectionHelper{
     while (n <= sectionSize) {
       Sticker sticker = Sticker(
         section: name,
-        ammount: SharedPrefs.instance.getInt(name + n.toString()) ?? 0,
+       //ammount: SharedPrefs.instance.getInt(name + n.toString()) ?? 0,
+       ammount: 10,
         number: n.toString(),
         sectionName: countryName,
         flag: flag,

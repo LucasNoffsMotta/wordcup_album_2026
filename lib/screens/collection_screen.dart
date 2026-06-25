@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:core';
+import 'dart:io';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wordcup_album_2026/helper/statistic_builder_helper.dart';
@@ -444,8 +447,35 @@ class CollectionScreenState extends State<CollectionScreen> {
     );
   }
 
+  //Bitset:
+  // 1 = can trade
+  // 0 = cant trade
+  String getStickersWithMoreThanOne() {
+    List<int> stickers = widget.collection
+    .map((s) => s.ammount > 1 ? 1 : 0)
+    .toList();
+
+    return stickers.join("");
+  }
+
+//TODO: Obviously this data shouldn`t be shared as a string. 
+//May create a bitset:
+// 0 -> Can trade
+// 1 -> Cannot trade
   Widget getQrCode() {
-    return CollectionQrCode("teste", screenWidth / 6);
+    String qrCode = getStickersWithMoreThanOne();
+      // 1. Encode String to UTF-8 Bytes
+      List<int> stringBytes = utf8.encode(qrCode);
+
+    // 2. Compress Bytes using GZIP
+      List<int> gzippedBytes = gzip.encode(stringBytes);
+
+
+    // Optional: Convert compressed bytes to a Base64 string for safe transport/storage
+      String base64GzipString = base64.encode(gzippedBytes);
+
+    print(base64GzipString);    
+    return CollectionQrCode(base64GzipString, screenWidth / 6);
   }
 
   Widget getStatisticScreen() {

@@ -3,7 +3,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class CollectionQrCode extends StatelessWidget {
   const CollectionQrCode(this.collection, this.padding, {super.key});
-
   final String collection;
   final double padding;
 
@@ -20,11 +19,21 @@ class CollectionQrCode extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            SizedBox(height: padding),
             Expanded(
               child: Column(
                 children: [
                   Text("Collection QR Code"),
-                  QrImageView(data: collection, size: 280),
+                  Card(
+                    color: Colors.white,
+                    child: QrImageView(
+                      data: collection,
+                      size: 280,
+                      version: QrVersions
+                          .auto, // Automatically scales up the matrix size up to version 40
+                      errorCorrectionLevel: QrErrorCorrectLevel.L,
+                    ),
+                  ),
                 ],
               ),
             ),
