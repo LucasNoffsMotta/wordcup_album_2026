@@ -161,7 +161,6 @@ class StatisticBuilderHelper {
               ],
             ),
             SizedBox(width: 15),
-            Divider(height: dividerHeight, thickness: dividerThickness,),
           ],
         ),
       ),

@@ -6,11 +6,12 @@ import 'package:share_plus/share_plus.dart';
 import 'package:wordcup_album_2026/helper/statistic_builder_helper.dart';
 import 'package:wordcup_album_2026/models/collection_data.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
+import 'package:wordcup_album_2026/render_entities/collection_qr_code.dart';
 import 'package:wordcup_album_2026/render_entities/countrySection.dart';
 
 enum Filters { all, missing, repeated, alphabeticalOrder }
 
-enum Screens { collection, export, statistic }
+enum Screens { collection, export, statistic, qrCode }
 
 class CollectionScreen extends StatefulWidget {
   final List<Sticker> collection;
@@ -131,6 +132,16 @@ class CollectionScreenState extends State<CollectionScreen> {
         onPressed: () {
           setState(() {
             screen = Screens.statistic;
+          });
+        },
+        isSelected: false,
+      ),
+      CollapsibleItem(
+        text: "Trocar",
+        icon: Icons.change_circle_outlined,
+        onPressed: () {
+          setState(() {
+            screen = Screens.qrCode;
           });
         },
         isSelected: false,
@@ -433,6 +444,10 @@ class CollectionScreenState extends State<CollectionScreen> {
     );
   }
 
+  Widget getQrCode() {
+    return CollectionQrCode("teste", screenWidth / 6);
+  }
+
   Widget getStatisticScreen() {
     int collection = widget.collection
         .where((sticker) => sticker.ammount > 0)
@@ -472,6 +487,8 @@ class CollectionScreenState extends State<CollectionScreen> {
       case Screens.statistic:
         current = getStatisticScreen();
         break;
+      case Screens.qrCode:
+        current = getQrCode();
     }
     return current;
   }
