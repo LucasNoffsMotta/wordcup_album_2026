@@ -40,7 +40,6 @@ class StatisticBuilderHelper {
         child: Center(
           child: Column(
             children: [
-              //getMoneySpentChart(data, padding),
               getCollectionProgressChart(data, padding),
             ],
           ),

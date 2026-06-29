@@ -16,28 +16,32 @@ class CollectionQrCode extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(10),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(height: padding),
-            Expanded(
-              child: Column(
-                children: [
-                  Text("Collection QR Code"),
-                  Card(
-                    color: Colors.white,
-                    child: QrImageView(
-                      data: collection,
-                      size: 280,
-                      version: QrVersions
-                          .auto, // Automatically scales up the matrix size up to version 40
-                      errorCorrectionLevel: QrErrorCorrectLevel.L,
-                    ),
-                  ),
-                ],
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "QR Code de troca",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                ),
               ),
-            ),
-          ],
+              QrImageView(
+                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                data: collection,
+                size: 120,
+                version: QrVersions
+                    .auto, // Automatically scales up the matrix size up to version 40
+                errorCorrectionLevel: QrErrorCorrectLevel.L,
+              ),
+              Divider(height: 3, thickness: 3,),
+              Text(
+                "Escaneie o QR code para ver quais figurinhas pode trocar."
+              )
+            ],
+          ),
         ),
       ),
     );

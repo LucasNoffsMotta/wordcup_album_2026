@@ -3,7 +3,6 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wordcup_album_2026/helper/statistic_builder_helper.dart';
