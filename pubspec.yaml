@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^8.1.0
+  mobile_scanner: ^7.2.0
   percent_indicator: ^4.2.5
   qr_flutter: ^4.1.0
   responsive_grid: ^2.4.4

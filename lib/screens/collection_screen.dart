@@ -463,14 +463,8 @@ class CollectionScreenState extends State<CollectionScreen> {
 // 1 -> Cannot trade
   Widget getQrCode() {
     String qrCode = getStickersWithMoreThanOne();
-      // 1. Encode String to UTF-8 Bytes
       List<int> stringBytes = utf8.encode(qrCode);
-
-    // 2. Compress Bytes using GZIP
       List<int> gzippedBytes = gzip.encode(stringBytes);
-
-
-    // Optional: Convert compressed bytes to a Base64 string for safe transport/storage
       String base64GzipString = base64.encode(gzippedBytes);
 
     print(base64GzipString);    
