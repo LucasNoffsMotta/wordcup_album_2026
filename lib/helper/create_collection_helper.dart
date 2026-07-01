@@ -1,4 +1,5 @@
 import 'package:country_flags/country_flags.dart';
+import 'package:wordcup_album_2026/backend/shared_preferences.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 
 class CreateCollectionHelper{
@@ -517,8 +518,7 @@ class CreateCollectionHelper{
     while (n <= sectionSize) {
       Sticker sticker = Sticker(
         section: name,
-       //ammount: SharedPrefs.instance.getInt(name + n.toString()) ?? 0,
-       ammount: 10,
+       ammount: SharedPrefs.instance.getInt(name + n.toString()) ?? 0,
         number: n.toString(),
         sectionName: countryName,
         flag: flag,

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wordcup_album_2026/backend/shared_preferences.dart';
 import 'package:wordcup_album_2026/helper/statistic_builder_helper.dart';
 import 'package:wordcup_album_2026/models/collection_data.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
@@ -277,13 +278,16 @@ class CollectionScreenState extends State<CollectionScreen> {
           if (collectionMap.containsKey(piece)) {
             added = true;
             collectionMap[piece]!.ammount++;
+            SharedPrefs.setIntValue(piece.toUpperCase(), collectionMap[piece]!.ammount);
           }
         }
       });
     }
+
     String snackBarContent = added
         ? "Adicionado com sucesso!"
-        : "Nenhum match encontrado";
+        : "Nenhum match encontrado.";
+
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(snackBarContent)));
@@ -451,23 +455,23 @@ class CollectionScreenState extends State<CollectionScreen> {
   // 0 = cant trade
   String getStickersWithMoreThanOne() {
     List<int> stickers = widget.collection
-    .map((s) => s.ammount > 1 ? 1 : 0)
-    .toList();
+        .map((s) => s.ammount > 1 ? 1 : 0)
+        .toList();
 
     return stickers.join("");
   }
 
-//TODO: Obviously this data shouldn`t be shared as a string. 
-//May create a bitset:
-// 0 -> Can trade
-// 1 -> Cannot trade
+  //TODO: Obviously this data shouldn`t be shared as a string.
+  //May create a bitset:
+  // 0 -> Can trade
+  // 1 -> Cannot trade
   Widget getQrCode() {
     String qrCode = getStickersWithMoreThanOne();
-      List<int> stringBytes = utf8.encode(qrCode);
-      List<int> gzippedBytes = gzip.encode(stringBytes);
-      String base64GzipString = base64.encode(gzippedBytes);
+    List<int> stringBytes = utf8.encode(qrCode);
+    List<int> gzippedBytes = gzip.encode(stringBytes);
+    String base64GzipString = base64.encode(gzippedBytes);
 
-    print(base64GzipString);    
+    print(base64GzipString);
     return CollectionQrCode(base64GzipString, screenWidth / 6);
   }
 

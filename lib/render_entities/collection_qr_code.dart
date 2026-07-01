@@ -7,12 +7,7 @@ class CollectionQrCode extends StatelessWidget {
   final double padding;
 
   void readQRCode() {
-
   }
-
-  // Widget showTradeCards() {
-
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +41,7 @@ class CollectionQrCode extends StatelessWidget {
                       data: collection,
                       size: 120,
                       version: QrVersions
-                          .auto, // Automatically scales up the matrix size up to version 40
+                          .auto, 
                       errorCorrectionLevel: QrErrorCorrectLevel.L,
                     ),
                     Divider(height: 3, thickness: 3),
