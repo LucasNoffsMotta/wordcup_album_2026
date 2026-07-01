@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:wordcup_album_2026/business_rules/screen_filters.dart';
 import 'package:wordcup_album_2026/data/export_cards_service.dart';
 import 'package:wordcup_album_2026/data/import_cards_service.dart';
@@ -15,7 +14,24 @@ import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/presentation/widgets/collection_qr_code.dart';
 import 'package:wordcup_album_2026/presentation/widgets/countrySection.dart';
 
+/*
+REFACTOR!
+Simple if-statements to show and hide widgets based on a flag or nullable field in the ViewModel
 
+Animation logic that relies on the widget to calculate
+
+Layout logic based on device information, like screen size or orientation.
+
+Simple routing logic
+
+Separar em services:
+- ImportService
+- ExportService
+- SideBarSectionsBuilder
+- FilterService
+- StatisticService
+- QRCodeService
+*/
 
 enum Screens { collection, export, statistic, qrCode }
 
@@ -344,7 +360,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                     ),
                     label: Text("Repetidas", style: TextStyle(fontSize: 20)),
                     onPressed: () {
-                      ExportCardsService.export(filter);
+                      ExportCardsService.export(Filters.repeated);
                     },
                     icon: Icon(Icons.share_outlined),
                   ),
@@ -364,7 +380,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                     ),
                     label: Text("Faltando", style: TextStyle(fontSize: 20)),
                     onPressed: () {
-                     ExportCardsService.export(filter);
+                     ExportCardsService.export(Filters.missing);
                     },
                     icon: Icon(Icons.share_rounded),
                   ),
