@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wordcup_album_2026/backend/shared_preferences.dart';
+import 'package:wordcup_album_2026/data/shared_preferences.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 
 class CardCell extends StatefulWidget {
@@ -12,12 +12,10 @@ class CardCell extends StatefulWidget {
   }
 }
 
-//Precisa setar o SP toda vez que incrementar o valor, nao apenas quando chama OnClicked de dentro do sticker
 class CardCellState extends State<CardCell> {
   Future<void> incrementStickerCount() async {
     setState(() {
       widget.sticker!.ammount += 1;
-      
       SharedPrefs.setIntValue(widget.sticker!.section + widget.sticker!.number, widget.sticker!.ammount);
     });
   }

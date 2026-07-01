@@ -1,5 +1,5 @@
 import 'package:country_flags/country_flags.dart';
-import 'package:wordcup_album_2026/backend/shared_preferences.dart';
+import 'package:wordcup_album_2026/data/shared_preferences.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 
 class CreateCollectionHelper{

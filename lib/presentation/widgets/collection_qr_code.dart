@@ -7,7 +7,9 @@ class CollectionQrCode extends StatelessWidget {
   final double padding;
 
   void readQRCode() {
+
   }
+
 
   @override
   Widget build(BuildContext context) {

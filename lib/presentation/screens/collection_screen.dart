@@ -5,14 +5,17 @@ import 'dart:io';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:wordcup_album_2026/backend/shared_preferences.dart';
-import 'package:wordcup_album_2026/helper/statistic_builder_helper.dart';
+import 'package:wordcup_album_2026/business_rules/screen_filters.dart';
+import 'package:wordcup_album_2026/data/export_cards_service.dart';
+import 'package:wordcup_album_2026/data/import_cards_service.dart';
+import 'package:wordcup_album_2026/data/collection_data_service.dart';
+import 'package:wordcup_album_2026/presentation/statistic_builder_helper.dart';
 import 'package:wordcup_album_2026/models/collection_data.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
-import 'package:wordcup_album_2026/render_entities/collection_qr_code.dart';
-import 'package:wordcup_album_2026/render_entities/countrySection.dart';
+import 'package:wordcup_album_2026/presentation/widgets/collection_qr_code.dart';
+import 'package:wordcup_album_2026/presentation/widgets/countrySection.dart';
 
-enum Filters { all, missing, repeated, alphabeticalOrder }
+
 
 enum Screens { collection, export, statistic, qrCode }
 
@@ -40,8 +43,9 @@ class CollectionScreenState extends State<CollectionScreen> {
   double screenWidth = 0;
   double screenHeight = 0;
   late Widget collectionScreen;
-  late Map<String, Sticker> collectionMap;
   final TextEditingController _textFieldController = TextEditingController();
+  final ImportCardsService _importService = ImportCardsService();
+
 
   @override
   void dispose() {
@@ -89,7 +93,7 @@ class CollectionScreenState extends State<CollectionScreen> {
           setFilter(Filters.all);
           setSelectedBtn(Filters.all);
         },
-        isSelected: true,
+        isSelected: filter == Filters.all,
       ),
 
       CollapsibleItem(
@@ -99,7 +103,7 @@ class CollectionScreenState extends State<CollectionScreen> {
           setFilter(Filters.missing);
           setSelectedBtn(Filters.missing);
         },
-        isSelected: false,
+        isSelected: filter == Filters.missing,
       ),
       CollapsibleItem(
         text: "Repetidas",
@@ -108,7 +112,7 @@ class CollectionScreenState extends State<CollectionScreen> {
           setFilter(Filters.repeated);
           setSelectedBtn(Filters.repeated);
         },
-        isSelected: false,
+        isSelected: filter == Filters.repeated,
       ),
       CollapsibleItem(
         text: "Ordenar",
@@ -117,7 +121,7 @@ class CollectionScreenState extends State<CollectionScreen> {
           setFilter(Filters.alphabeticalOrder);
           setSelectedBtn(Filters.alphabeticalOrder);
         },
-        isSelected: false,
+        isSelected: filter == Filters.alphabeticalOrder,
       ),
       CollapsibleItem(
         text: "Exportar",
@@ -236,23 +240,6 @@ class CollectionScreenState extends State<CollectionScreen> {
     }
   }
 
-  String _exportTxt(Filters filter) {
-    String exportTxt = "";
-    for (var s in widget.collection) {
-      if (filter == Filters.missing && s.ammount == 0) {
-        if (!exportTxt.contains(s.flagEmoji!)) {
-          exportTxt += "\n${s.flagEmoji}\n";
-        }
-        exportTxt += " ${s.section} ${s.number}, ";
-      } else if (filter == Filters.repeated && s.ammount > 1) {
-        if (!exportTxt.contains(s.flagEmoji!)) {
-          exportTxt += "\n${s.flagEmoji}\n";
-        }
-        exportTxt += " ${s.section} ${s.number}, ";
-      }
-    }
-    return exportTxt;
-  }
 
   void _deleteCollection() {
     for (var v in widget.collection) {
@@ -265,28 +252,12 @@ class CollectionScreenState extends State<CollectionScreen> {
   }
 
   void tryAddCollectionByString(String input) {
-    bool added = false;
-
-    if (input.length >= 4) {
-      var toLower = input.toLowerCase();
-      var splitPieces = toLower.split(",");
-
-      List<String> trimmedList = splitPieces.map((str) => str.trim()).toList();
-
-      setState(() {
-        for (var piece in trimmedList) {
-          if (collectionMap.containsKey(piece)) {
-            added = true;
-            collectionMap[piece]!.ammount++;
-            SharedPrefs.setIntValue(piece.toUpperCase(), collectionMap[piece]!.ammount);
-          }
-        }
-      });
-    }
-
-    String snackBarContent = added
+    String snackBarContent = _importService.tryAddCollectionByString(input)
         ? "Adicionado com sucesso!"
         : "Nenhum match encontrado.";
+    
+    setState(() {
+    });
 
     ScaffoldMessenger.of(
       context,
@@ -373,9 +344,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                     ),
                     label: Text("Repetidas", style: TextStyle(fontSize: 20)),
                     onPressed: () {
-                      SharePlus.instance.share(
-                        ShareParams(text: _exportTxt(Filters.repeated)),
-                      );
+                      ExportCardsService.export(filter);
                     },
                     icon: Icon(Icons.share_outlined),
                   ),
@@ -395,9 +364,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                     ),
                     label: Text("Faltando", style: TextStyle(fontSize: 20)),
                     onPressed: () {
-                      SharePlus.instance.share(
-                        ShareParams(text: _exportTxt(Filters.missing)),
-                      );
+                     ExportCardsService.export(filter);
                     },
                     icon: Icon(Icons.share_rounded),
                   ),
@@ -523,15 +490,12 @@ class CollectionScreenState extends State<CollectionScreen> {
   @override
   void initState() {
     super.initState();
-
     currentSelection = widget.collection;
     collectionScreen = getCollectionScreenBody();
     _items = _generateItems;
     sectionsMap = <String, List<CountrySection>>{};
-    collectionMap = {
-      for (var e in widget.collection)
-        e.section.toLowerCase() + e.number.toLowerCase(): e,
-    };
+    CollectionDataService.setCollection(widget.collection);
+    CollectionDataService.createCollectionMap();
     createSections();
   }
 

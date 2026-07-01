@@ -1,0 +1,1 @@
+enum Filters { all, missing, repeated, alphabeticalOrder }
