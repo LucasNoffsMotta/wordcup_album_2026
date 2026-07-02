@@ -13,7 +13,6 @@ import 'package:wordcup_album_2026/presentation/statistic_builder_helper.dart';
 import 'package:wordcup_album_2026/models/collection_data.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/presentation/widgets/collection_qr_code.dart';
-import 'package:wordcup_album_2026/presentation/widgets/countrySection.dart';
 
 /*
 REFACTOR!
@@ -28,8 +27,8 @@ Simple routing logic
 Separar em services:
 - ImportService - DONE
 - ExportService - DONE
-- createSectuions -
-- FilterService
+- createSectuions - DONE
+- FilterService - Move CurrentSelectionData to a separate class that will handle the filter
 - StatisticService
 - QRCodeService
 */
@@ -48,8 +47,6 @@ class CollectionScreen extends StatefulWidget {
 
 class CollectionScreenState extends State<CollectionScreen> {
   List<Sticker>? currentSelection;
-  // Map<String, List<CountrySection>> sectionsMap =
-  //     <String, List<CountrySection>>{};
   late List<CollapsibleItem> _items;
   Filters filter = Filters.all;
   Screens screen = Screens.collection;
@@ -179,13 +176,13 @@ class CollectionScreenState extends State<CollectionScreen> {
       this.filter = filter;
 
       if (filter == Filters.all) {
-        currentSelection = List.from(widget.collection);
+        currentSelection = List.from(CollectionDataService.collection);
       } else if (filter == Filters.missing) {
-        currentSelection = widget.collection
+        currentSelection = CollectionDataService.collection
             .where((e) => e.ammount == 0)
             .toList();
       } else if (filter == Filters.repeated) {
-        currentSelection = widget.collection
+        currentSelection = CollectionDataService.collection
             .where((e) => e.ammount > 1)
             .toList();
       } else if (filter == Filters.alphabeticalOrder) {
@@ -251,7 +248,7 @@ class CollectionScreenState extends State<CollectionScreen> {
 
 
   void _deleteCollection() {
-    for (var v in widget.collection) {
+    for (var v in CollectionDataService.collection) {
       v.ammount = 0;
     }
 
@@ -272,31 +269,6 @@ class CollectionScreenState extends State<CollectionScreen> {
       context,
     ).showSnackBar(SnackBar(content: Text(snackBarContent)));
   }
-
-
-  // void createSections() {
-  //   Map<String, String> addedSections = <String, String>{};
-  //   sectionsMap = <String, List<CountrySection>>{};
-
-  //   for (var sticker in currentSelection!) {
-  //     if (!addedSections.containsKey(sticker.sectionName)) {
-  //       sectionsMap[sticker.sectionName] = [];
-
-  //       var stickersOfThisSection = currentSelection!.where(
-  //         (e) => e.sectionName == sticker.sectionName,
-  //       );
-
-  //       sectionsMap[sticker.sectionName]!.add(
-  //         CountrySection(
-  //           cards: stickersOfThisSection.toList(),
-  //           flag: sticker.flag!,
-  //           name: sticker.section,
-  //         ),
-  //       );
-  //       addedSections[sticker.sectionName] = sticker.section;
-  //     }
-  //   }
-  // }
 
   Widget getExportScreen() {
     return Wrap(
@@ -388,7 +360,7 @@ class CollectionScreenState extends State<CollectionScreen> {
           ),
           Expanded(
             child: ListView(
-              children: [...CreateCollectionHelper.sectionsMap.values.expand((section) => section)],
+              children: [...CollectionDataService.sectionsMap.values.expand((section) => section)],
             ),
           ),
         ],
@@ -400,7 +372,7 @@ class CollectionScreenState extends State<CollectionScreen> {
   // 1 = can trade
   // 0 = cant trade
   String getStickersWithMoreThanOne() {
-    List<int> stickers = widget.collection
+    List<int> stickers = CollectionDataService.collection
         .map((s) => s.ammount > 1 ? 1 : 0)
         .toList();
 
@@ -422,10 +394,10 @@ class CollectionScreenState extends State<CollectionScreen> {
   }
 
   Widget getStatisticScreen() {
-    int collection = widget.collection
+    int collection = CollectionDataService.collection
         .where((sticker) => sticker.ammount > 0)
         .length;
-    int totalCardsOwned = widget.collection.fold(
+    int totalCardsOwned = CollectionDataService.collection.fold(
       0,
       (sum, item) => sum + item.ammount,
     );
@@ -435,10 +407,10 @@ class CollectionScreenState extends State<CollectionScreen> {
         collection,
       ),
       totalCardsOwned: totalCardsOwned,
-      doubledCards: widget.collection
+      doubledCards: CollectionDataService.collection
           .where((sticker) => sticker.ammount > 1)
           .length,
-      missingCards: widget.collection
+      missingCards: CollectionDataService.collection
           .where((sticker) => sticker.ammount == 0)
           .length,
       boostersBought: StatisticBuilderHelper.getBoughtBoosters(
@@ -469,17 +441,17 @@ class CollectionScreenState extends State<CollectionScreen> {
   @override
   void initState() {
     super.initState();
-    currentSelection = widget.collection;
+    currentSelection = CollectionDataService.collection;
     collectionScreen = getCollectionScreenBody();
     _items = _generateItems;
-    CollectionDataService.setCollection(widget.collection);
+    CollectionDataService.setCollection(CollectionDataService.collection);
     CollectionDataService.createCollectionMap();
-    CreateCollectionHelper.setSectionsToDisplay(currentSelection!);
+    CollectionDataService.setSectionsToDisplay(currentSelection!);
   }
 
   @override
   Widget build(BuildContext context) {
-    CreateCollectionHelper.setSectionsToDisplay(currentSelection!);
+    CollectionDataService.setSectionsToDisplay(currentSelection!);
     screenWidth = MediaQuery.sizeOf(context).width;
     screenHeight = MediaQuery.sizeOf(context).height;
     return Scaffold(
