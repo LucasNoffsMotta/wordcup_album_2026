@@ -25,8 +25,8 @@ Layout logic based on device information, like screen size or orientation.
 Simple routing logic
 
 Separar em services:
-- ImportService
-- ExportService
+- ImportService - DONE
+- ExportService - DONE
 - SideBarSectionsBuilder
 - FilterService
 - StatisticService
@@ -52,10 +52,6 @@ class CollectionScreenState extends State<CollectionScreen> {
   late List<CollapsibleItem> _items;
   Filters filter = Filters.all;
   Screens screen = Screens.collection;
-  bool allBtnSelected = false;
-  bool remainingBtnSelected = false;
-  bool toChangeBtnSelected = false;
-  bool sortByAlphaBtnSelected = false;
   double screenWidth = 0;
   double screenHeight = 0;
   late Widget collectionScreen;
@@ -107,7 +103,6 @@ class CollectionScreenState extends State<CollectionScreen> {
         icon: Icons.play_circle_fill_rounded,
         onPressed: () {
           setFilter(Filters.all);
-          setSelectedBtn(Filters.all);
         },
         isSelected: filter == Filters.all,
       ),
@@ -117,7 +112,6 @@ class CollectionScreenState extends State<CollectionScreen> {
         icon: Icons.play_circle_outline,
         onPressed: () {
           setFilter(Filters.missing);
-          setSelectedBtn(Filters.missing);
         },
         isSelected: filter == Filters.missing,
       ),
@@ -126,7 +120,6 @@ class CollectionScreenState extends State<CollectionScreen> {
         icon: Icons.layers_rounded,
         onPressed: () {
           setFilter(Filters.repeated);
-          setSelectedBtn(Filters.repeated);
         },
         isSelected: filter == Filters.repeated,
       ),
@@ -135,7 +128,6 @@ class CollectionScreenState extends State<CollectionScreen> {
         icon: Icons.sort_by_alpha,
         onPressed: () {
           setFilter(Filters.alphabeticalOrder);
-          setSelectedBtn(Filters.alphabeticalOrder);
         },
         isSelected: filter == Filters.alphabeticalOrder,
       ),
@@ -280,36 +272,6 @@ class CollectionScreenState extends State<CollectionScreen> {
     ).showSnackBar(SnackBar(content: Text(snackBarContent)));
   }
 
-  void setSelectedBtn(Filters filter) {
-    setState(() {
-      if (filter == Filters.all) {
-        allBtnSelected = true;
-        remainingBtnSelected = false;
-        toChangeBtnSelected = false;
-        sortByAlphaBtnSelected = false;
-      }
-
-      if (filter == Filters.missing) {
-        allBtnSelected = false;
-        remainingBtnSelected = true;
-        toChangeBtnSelected = false;
-        sortByAlphaBtnSelected = false;
-      }
-      if (filter == Filters.repeated) {
-        allBtnSelected = false;
-        remainingBtnSelected = false;
-        toChangeBtnSelected = true;
-        sortByAlphaBtnSelected = false;
-      }
-
-      if (filter == Filters.alphabeticalOrder) {
-        allBtnSelected = false;
-        remainingBtnSelected = false;
-        toChangeBtnSelected = false;
-        sortByAlphaBtnSelected = true;
-      }
-    });
-  }
 
   void createSections() {
     Map<String, String> addedSections = <String, String>{};
