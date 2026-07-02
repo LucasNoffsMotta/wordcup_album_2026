@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:wordcup_album_2026/business_rules/screen_filters.dart';
+import 'package:wordcup_album_2026/data/create_collection_helper.dart';
 import 'package:wordcup_album_2026/data/export_cards_service.dart';
 import 'package:wordcup_album_2026/data/import_cards_service.dart';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
@@ -27,7 +28,7 @@ Simple routing logic
 Separar em services:
 - ImportService - DONE
 - ExportService - DONE
-- SideBarSectionsBuilder
+- createSectuions -
 - FilterService
 - StatisticService
 - QRCodeService
@@ -47,8 +48,8 @@ class CollectionScreen extends StatefulWidget {
 
 class CollectionScreenState extends State<CollectionScreen> {
   List<Sticker>? currentSelection;
-  Map<String, List<CountrySection>> sectionsMap =
-      <String, List<CountrySection>>{};
+  // Map<String, List<CountrySection>> sectionsMap =
+  //     <String, List<CountrySection>>{};
   late List<CollapsibleItem> _items;
   Filters filter = Filters.all;
   Screens screen = Screens.collection;
@@ -273,29 +274,29 @@ class CollectionScreenState extends State<CollectionScreen> {
   }
 
 
-  void createSections() {
-    Map<String, String> addedSections = <String, String>{};
-    sectionsMap = <String, List<CountrySection>>{};
+  // void createSections() {
+  //   Map<String, String> addedSections = <String, String>{};
+  //   sectionsMap = <String, List<CountrySection>>{};
 
-    for (var sticker in currentSelection!) {
-      if (!addedSections.containsKey(sticker.sectionName)) {
-        sectionsMap[sticker.sectionName] = [];
+  //   for (var sticker in currentSelection!) {
+  //     if (!addedSections.containsKey(sticker.sectionName)) {
+  //       sectionsMap[sticker.sectionName] = [];
 
-        var stickersOfThisSection = currentSelection!.where(
-          (e) => e.sectionName == sticker.sectionName,
-        );
+  //       var stickersOfThisSection = currentSelection!.where(
+  //         (e) => e.sectionName == sticker.sectionName,
+  //       );
 
-        sectionsMap[sticker.sectionName]!.add(
-          CountrySection(
-            cards: stickersOfThisSection.toList(),
-            flag: sticker.flag!,
-            name: sticker.section,
-          ),
-        );
-        addedSections[sticker.sectionName] = sticker.section;
-      }
-    }
-  }
+  //       sectionsMap[sticker.sectionName]!.add(
+  //         CountrySection(
+  //           cards: stickersOfThisSection.toList(),
+  //           flag: sticker.flag!,
+  //           name: sticker.section,
+  //         ),
+  //       );
+  //       addedSections[sticker.sectionName] = sticker.section;
+  //     }
+  //   }
+  // }
 
   Widget getExportScreen() {
     return Wrap(
@@ -387,7 +388,7 @@ class CollectionScreenState extends State<CollectionScreen> {
           ),
           Expanded(
             child: ListView(
-              children: [...sectionsMap.values.expand((section) => section)],
+              children: [...CreateCollectionHelper.sectionsMap.values.expand((section) => section)],
             ),
           ),
         ],
@@ -471,15 +472,14 @@ class CollectionScreenState extends State<CollectionScreen> {
     currentSelection = widget.collection;
     collectionScreen = getCollectionScreenBody();
     _items = _generateItems;
-    sectionsMap = <String, List<CountrySection>>{};
     CollectionDataService.setCollection(widget.collection);
     CollectionDataService.createCollectionMap();
-    createSections();
+    CreateCollectionHelper.setSectionsToDisplay(currentSelection!);
   }
 
   @override
   Widget build(BuildContext context) {
-    createSections();
+    CreateCollectionHelper.setSectionsToDisplay(currentSelection!);
     screenWidth = MediaQuery.sizeOf(context).width;
     screenHeight = MediaQuery.sizeOf(context).height;
     return Scaffold(

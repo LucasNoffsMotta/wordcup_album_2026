@@ -1,11 +1,15 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:wordcup_album_2026/data/shared_preferences.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
+import 'package:wordcup_album_2026/presentation/widgets/countrySection.dart';
 
-class CreateCollectionHelper{
+class CreateCollectionHelper {
   CreateCollectionHelper._();
 
-   static List<Sticker> createNewCollection() {
+  static Map<String, List<CountrySection>> sectionsMap =
+      <String, List<CountrySection>>{};
+
+  static List<Sticker> createNewCollection() {
     List<Sticker> stickers = [];
     const ImageTheme mainTheme = ImageTheme(
       shape: Circle(),
@@ -518,7 +522,7 @@ class CreateCollectionHelper{
     while (n <= sectionSize) {
       Sticker sticker = Sticker(
         section: name,
-       ammount: SharedPrefs.instance.getInt(name + n.toString()) ?? 0,
+        ammount: SharedPrefs.instance.getInt(name + n.toString()) ?? 0,
         number: n.toString(),
         sectionName: countryName,
         flag: flag,
@@ -530,6 +534,27 @@ class CreateCollectionHelper{
     }
   }
 
+  static void setSectionsToDisplay(List<Sticker> currentSelection) {
+    Map<String, String> addedSections = <String, String>{};
+    sectionsMap = <String, List<CountrySection>>{};
 
-  
+    for (var sticker in currentSelection) {
+      if (!addedSections.containsKey(sticker.sectionName)) {
+        sectionsMap[sticker.sectionName] = [];
+
+        var stickersOfThisSection = currentSelection.where(
+          (e) => e.sectionName == sticker.sectionName,
+        );
+
+        sectionsMap[sticker.sectionName]!.add(
+          CountrySection(
+            cards: stickersOfThisSection.toList(),
+            flag: sticker.flag!,
+            name: sticker.section,
+          ),
+        );
+        addedSections[sticker.sectionName] = sticker.section;
+      }
+    }
+  }
 }
