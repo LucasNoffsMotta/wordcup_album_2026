@@ -1,12 +1,55 @@
+import 'package:wordcup_album_2026/business_rules/screen_filters.dart';
+import 'package:wordcup_album_2026/data/create_collection_helper.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/presentation/widgets/countrySection.dart';
 
 class CollectionDataService {
   static late Map<String, Sticker> collectionMap;
-  static late List<Sticker> collection;
+  static List<Sticker> collection = [];
+  static List<Sticker> selectedCards = [];
   static Map<String, List<CountrySection>> sectionsMap =
       <String, List<CountrySection>>{};
 
+  static String getStickersToTradeString() {
+  List<int> stickers = CollectionDataService.collection
+      .map((s) => s.ammount > 1 ? 1 : 0)
+      .toList();
+
+  return stickers.join("");
+  }
+
+  static void deleteCollection() {
+     for (var v in CollectionDataService.collection) {
+      v.ammount = 0;
+    }
+  }
+
+  static void search(String input) {
+    selectedCards = selectedCards
+        .where(
+          (item) => item.section.toLowerCase().contains(input.toLowerCase()),
+        )
+        .toList();
+  }
+
+  static void filter(Filters filter) {
+    if (filter == Filters.all) {
+      selectedCards = List.from(collection);
+    } else if (filter == Filters.missing) {
+      selectedCards = collection.where((e) => e.ammount == 0).toList();
+    } else if (filter == Filters.repeated) {
+      selectedCards = collection.where((e) => e.ammount > 1).toList();
+    } else if (filter == Filters.alphabeticalOrder) {
+      selectedCards = List.from(selectedCards)
+        ..sort((a, b) {
+          int result = a.section.compareTo(b.section);
+          if (result == 0) {
+            result = int.parse(a.number).compareTo(int.parse(b.number));
+          }
+          return result;
+        });
+    }
+  }
 
   static void createCollectionMap() {
     collectionMap = {
@@ -15,15 +58,15 @@ class CollectionDataService {
     };
   }
 
-  static void setSectionsToDisplay(List<Sticker> currentSelection) {
+  static void setSectionsToDisplay() {
     Map<String, String> addedSections = <String, String>{};
     sectionsMap = <String, List<CountrySection>>{};
 
-    for (var sticker in currentSelection) {
+    for (var sticker in selectedCards) {
       if (!addedSections.containsKey(sticker.sectionName)) {
         sectionsMap[sticker.sectionName] = [];
 
-        var stickersOfThisSection = currentSelection.where(
+        var stickersOfThisSection = selectedCards.where(
           (e) => e.sectionName == sticker.sectionName,
         );
 
@@ -39,7 +82,8 @@ class CollectionDataService {
     }
   }
 
-  static void setCollection(List<Sticker> col) {
-    collection = col;
+  static void initCollection() {
+    CreateCollectionHelper.createNewCollection(collection);
+    selectedCards = collection;
   }
 }

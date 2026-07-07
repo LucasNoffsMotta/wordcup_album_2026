@@ -5,13 +5,11 @@ import 'dart:io';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:wordcup_album_2026/business_rules/screen_filters.dart';
-import 'package:wordcup_album_2026/data/create_collection_helper.dart';
 import 'package:wordcup_album_2026/data/export_cards_service.dart';
 import 'package:wordcup_album_2026/data/import_cards_service.dart';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
 import 'package:wordcup_album_2026/presentation/statistic_builder_helper.dart';
 import 'package:wordcup_album_2026/models/collection_data.dart';
-import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/presentation/widgets/collection_qr_code.dart';
 
 /*
@@ -28,16 +26,16 @@ Separar em services:
 - ImportService - DONE
 - ExportService - DONE
 - createSectuions - DONE
-- FilterService - Move CurrentSelectionData to a separate class that will handle the filter
+- FilterService - Move CurrentSelectionData to a separate class that will handle the filter - DONE
 - StatisticService
 - QRCodeService
+- Move sections Widget to separate class
 */
 
 enum Screens { collection, export, statistic, qrCode }
 
 class CollectionScreen extends StatefulWidget {
-  final List<Sticker> collection;
-  const CollectionScreen({super.key, required this.collection});
+  const CollectionScreen({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -46,7 +44,6 @@ class CollectionScreen extends StatefulWidget {
 }
 
 class CollectionScreenState extends State<CollectionScreen> {
-  List<Sticker>? currentSelection;
   late List<CollapsibleItem> _items;
   Filters filter = Filters.all;
   Screens screen = Screens.collection;
@@ -174,27 +171,7 @@ class CollectionScreenState extends State<CollectionScreen> {
     setState(() {
       screen = Screens.collection;
       this.filter = filter;
-
-      if (filter == Filters.all) {
-        currentSelection = List.from(CollectionDataService.collection);
-      } else if (filter == Filters.missing) {
-        currentSelection = CollectionDataService.collection
-            .where((e) => e.ammount == 0)
-            .toList();
-      } else if (filter == Filters.repeated) {
-        currentSelection = CollectionDataService.collection
-            .where((e) => e.ammount > 1)
-            .toList();
-      } else if (filter == Filters.alphabeticalOrder) {
-        currentSelection = List.from(currentSelection!)
-          ..sort((a, b) {
-            int result = a.section.compareTo(b.section);
-            if (result == 0) {
-              result = int.parse(a.number).compareTo(int.parse(b.number));
-            }
-            return result;
-          });
-      }
+      CollectionDataService.filter(filter);
     });
   }
 
@@ -236,22 +213,13 @@ class CollectionScreenState extends State<CollectionScreen> {
       setFilter(Filters.all);
     } else {
       setState(() {
-        currentSelection = currentSelection!
-            .where(
-              (item) =>
-                  item.section.toLowerCase().contains(input.toLowerCase()),
-            )
-            .toList();
+        CollectionDataService.search(input);
       });
     }
   }
 
-
   void _deleteCollection() {
-    for (var v in CollectionDataService.collection) {
-      v.ammount = 0;
-    }
-
+    CollectionDataService.deleteCollection();
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text("Figurinhas zeradas com sucesso!")));
@@ -368,23 +336,13 @@ class CollectionScreenState extends State<CollectionScreen> {
     );
   }
 
-  //Bitset:
-  // 1 = can trade
-  // 0 = cant trade
-  String getStickersWithMoreThanOne() {
-    List<int> stickers = CollectionDataService.collection
-        .map((s) => s.ammount > 1 ? 1 : 0)
-        .toList();
-
-    return stickers.join("");
-  }
 
   //TODO: Obviously this data shouldn`t be shared as a string.
   //May create a bitset:
   // 0 -> Can trade
   // 1 -> Cannot trade
   Widget getQrCode() {
-    String qrCode = getStickersWithMoreThanOne();
+    String qrCode = CollectionDataService.getStickersToTradeString();
     List<int> stringBytes = utf8.encode(qrCode);
     List<int> gzippedBytes = gzip.encode(stringBytes);
     String base64GzipString = base64.encode(gzippedBytes);
@@ -441,17 +399,16 @@ class CollectionScreenState extends State<CollectionScreen> {
   @override
   void initState() {
     super.initState();
-    currentSelection = CollectionDataService.collection;
+    CollectionDataService.initCollection();
     collectionScreen = getCollectionScreenBody();
     _items = _generateItems;
-    CollectionDataService.setCollection(CollectionDataService.collection);
     CollectionDataService.createCollectionMap();
-    CollectionDataService.setSectionsToDisplay(currentSelection!);
+    CollectionDataService.setSectionsToDisplay();
   }
 
   @override
   Widget build(BuildContext context) {
-    CollectionDataService.setSectionsToDisplay(currentSelection!);
+    CollectionDataService.setSectionsToDisplay();
     screenWidth = MediaQuery.sizeOf(context).width;
     screenHeight = MediaQuery.sizeOf(context).height;
     return Scaffold(

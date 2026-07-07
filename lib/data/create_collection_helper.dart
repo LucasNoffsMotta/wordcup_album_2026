@@ -6,8 +6,7 @@ class CreateCollectionHelper {
   CreateCollectionHelper._();
 
 
-  static List<Sticker> createNewCollection() {
-    List<Sticker> stickers = [];
+  static void createNewCollection(List<Sticker> collection) {
     const ImageTheme mainTheme = ImageTheme(
       shape: Circle(),
       width: 20,
@@ -19,7 +18,7 @@ class CreateCollectionHelper {
       'FWC',
       8,
       "Museu Inicio",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('AX', theme: mainTheme),
       '🏛️',
     );
@@ -29,7 +28,7 @@ class CreateCollectionHelper {
       'MEX',
       20,
       "México",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('MEX', theme: mainTheme),
       '🇲🇽',
     );
@@ -39,7 +38,7 @@ class CreateCollectionHelper {
       'RSA',
       20,
       "África do Sul",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('ZAF', theme: mainTheme),
       '🇿🇦',
     );
@@ -49,7 +48,7 @@ class CreateCollectionHelper {
       'KOR',
       20,
       "Coreia do Sul",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('KOR', theme: mainTheme),
       '🇰🇷',
     );
@@ -59,7 +58,7 @@ class CreateCollectionHelper {
       'CZE',
       20,
       "República Tcheca",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('CZE', theme: mainTheme),
       '🇨🇿',
     );
@@ -69,7 +68,7 @@ class CreateCollectionHelper {
       'CAN',
       20,
       "Canadá",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('CAN', theme: mainTheme),
       '🇨🇦',
     );
@@ -79,7 +78,7 @@ class CreateCollectionHelper {
       'BIH',
       20,
       "Bósnia e Herzegovina",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('BIH', theme: mainTheme),
       '🇧🇦',
     );
@@ -89,7 +88,7 @@ class CreateCollectionHelper {
       'QAT',
       20,
       "Catar",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('QAT', theme: mainTheme),
       '🇶🇦',
     );
@@ -99,7 +98,7 @@ class CreateCollectionHelper {
       'SUI',
       20,
       "Suíça",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('CHE', theme: mainTheme),
       '🇨🇭',
     );
@@ -109,7 +108,7 @@ class CreateCollectionHelper {
       'BRA',
       20,
       "Brasil",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('BRA', theme: mainTheme),
       '🇧🇷',
     );
@@ -119,7 +118,7 @@ class CreateCollectionHelper {
       'MAR',
       20,
       "Marrocos",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('MAR', theme: mainTheme),
       '🇲🇦',
     );
@@ -129,7 +128,7 @@ class CreateCollectionHelper {
       'HAI',
       20,
       "Haiti",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('HTI', theme: mainTheme),
       '🇭🇹',
     );
@@ -139,7 +138,7 @@ class CreateCollectionHelper {
       'SCO',
       20,
       "Escócia",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('GB', theme: mainTheme),
       '🏴',
     );
@@ -149,7 +148,7 @@ class CreateCollectionHelper {
       'USA',
       20,
       "Estados Unidos",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('USA', theme: mainTheme),
       '🇺🇸',
     );
@@ -159,7 +158,7 @@ class CreateCollectionHelper {
       'PAR',
       20,
       "Paraguai",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('PRY', theme: mainTheme),
       '🇵🇾',
     );
@@ -169,7 +168,7 @@ class CreateCollectionHelper {
       'AUS',
       20,
       "Austrália",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('AUS', theme: mainTheme),
       '🇦🇺',
     );
@@ -179,7 +178,7 @@ class CreateCollectionHelper {
       'TUR',
       20,
       "Turquia",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('TUR', theme: mainTheme),
       '🇹🇷',
     );
@@ -189,7 +188,7 @@ class CreateCollectionHelper {
       'GER',
       20,
       "Alemanha",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('DEU', theme: mainTheme),
       '🇩🇪',
     );
@@ -199,7 +198,7 @@ class CreateCollectionHelper {
       'CUW',
       20,
       "Curaçao",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('CUW', theme: mainTheme),
       '🇨🇼',
     );
@@ -209,7 +208,7 @@ class CreateCollectionHelper {
       'CIV',
       20,
       "Costa do Marfim",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('CIV', theme: mainTheme),
       '🇨🇮',
     );
@@ -219,7 +218,7 @@ class CreateCollectionHelper {
       'ECU',
       20,
       "Equador",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('ECU', theme: mainTheme),
       '🇪🇨',
     );
@@ -229,7 +228,7 @@ class CreateCollectionHelper {
       'NED',
       20,
       "Países Baixos",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('NLD', theme: mainTheme),
       '🇳🇱',
     );
@@ -239,7 +238,7 @@ class CreateCollectionHelper {
       'JPN',
       20,
       "Japão",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('JPN', theme: mainTheme),
       '🇯🇵',
     );
@@ -249,7 +248,7 @@ class CreateCollectionHelper {
       'SWE',
       20,
       "Suécia",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('SWE', theme: mainTheme),
       '🇸🇪',
     );
@@ -259,7 +258,7 @@ class CreateCollectionHelper {
       'TUN',
       20,
       "Tunísia",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('TUN', theme: mainTheme),
       '🇹🇳',
     );
@@ -269,7 +268,7 @@ class CreateCollectionHelper {
       'BEL',
       20,
       "Bélgica",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('BEL', theme: mainTheme),
       '🇧🇪',
     );
@@ -279,7 +278,7 @@ class CreateCollectionHelper {
       'EGY',
       20,
       "Egito",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('EGY', theme: mainTheme),
       '🇪🇬',
     );
@@ -289,7 +288,7 @@ class CreateCollectionHelper {
       'IRN',
       20,
       "Irã",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('IRN', theme: mainTheme),
       '🇮🇷',
     );
@@ -299,7 +298,7 @@ class CreateCollectionHelper {
       'NZL',
       20,
       "Nova Zelândia",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('NZL', theme: mainTheme),
       '🇳🇿',
     );
@@ -309,7 +308,7 @@ class CreateCollectionHelper {
       'ESP',
       20,
       "Espanha",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('ESP', theme: mainTheme),
       '🇪🇸',
     );
@@ -319,7 +318,7 @@ class CreateCollectionHelper {
       'CPV',
       20,
       "Cabo Verde",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('CPV', theme: mainTheme),
       '🇨🇻',
     );
@@ -329,7 +328,7 @@ class CreateCollectionHelper {
       'KSA',
       20,
       "Arábia Saudita",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('SAU', theme: mainTheme),
       '🇸🇦',
     );
@@ -339,7 +338,7 @@ class CreateCollectionHelper {
       'URU',
       20,
       "Uruguai",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('URY', theme: mainTheme),
       '🇺🇾',
     );
@@ -349,7 +348,7 @@ class CreateCollectionHelper {
       'FRA',
       20,
       "França",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('FRA', theme: mainTheme),
       '🇫🇷',
     );
@@ -359,7 +358,7 @@ class CreateCollectionHelper {
       'SEN',
       20,
       "Senegal",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('SEN', theme: mainTheme),
       '🇸🇳',
     );
@@ -369,7 +368,7 @@ class CreateCollectionHelper {
       'IRQ',
       20,
       "Iraque",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('IRQ', theme: mainTheme),
       '🇮🇶',
     );
@@ -379,7 +378,7 @@ class CreateCollectionHelper {
       'NOR',
       20,
       "Noruega",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('NOR', theme: mainTheme),
       '🇳🇴',
     );
@@ -389,7 +388,7 @@ class CreateCollectionHelper {
       'ARG',
       20,
       "Argentina",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('ARG', theme: mainTheme),
       '🇦🇷',
     );
@@ -399,7 +398,7 @@ class CreateCollectionHelper {
       'ALG',
       20,
       "Argélia",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('DZA', theme: mainTheme),
       '🇩🇿',
     );
@@ -409,7 +408,7 @@ class CreateCollectionHelper {
       'AUT',
       20,
       "Áustria",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('AUT', theme: mainTheme),
       '🇦🇹',
     );
@@ -419,7 +418,7 @@ class CreateCollectionHelper {
       'JOR',
       20,
       "Jordânia",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('JOR', theme: mainTheme),
       '🇯🇴',
     );
@@ -429,7 +428,7 @@ class CreateCollectionHelper {
       'POR',
       20,
       "Portugal",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('PRT', theme: mainTheme),
       '🇵🇹',
     );
@@ -439,7 +438,7 @@ class CreateCollectionHelper {
       'USB',
       20,
       "Uzbequistão",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('UZB', theme: mainTheme),
       '🇺🇿',
     );
@@ -449,7 +448,7 @@ class CreateCollectionHelper {
       'COL',
       20,
       "Colômbia",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('COL', theme: mainTheme),
       '🇨🇴',
     );
@@ -459,7 +458,7 @@ class CreateCollectionHelper {
       'ENG',
       20,
       "Inglaterra",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('GB', theme: mainTheme),
       '🏴',
     );
@@ -469,7 +468,7 @@ class CreateCollectionHelper {
       'CRO',
       20,
       "Croácia",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('HRV', theme: mainTheme),
       '🇭🇷',
     );
@@ -479,7 +478,7 @@ class CreateCollectionHelper {
       'GHA',
       20,
       "Gana",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('GHA', theme: mainTheme),
       '🇬🇭',
     );
@@ -489,7 +488,7 @@ class CreateCollectionHelper {
       'PAN',
       20,
       "Panamá",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('PAN', theme: mainTheme),
       '🇵🇦',
     );
@@ -499,11 +498,10 @@ class CreateCollectionHelper {
       'FWC',
       19,
       "Museu Fim",
-      stickers,
+      collection,
       CountryFlag.fromCountryCode('AX', theme: mainTheme),
       '🏛️',
     );
-    return stickers;
   }
 
   static Future<void> insertTeamSection(
@@ -511,7 +509,7 @@ class CreateCollectionHelper {
     String name,
     int sectionSize,
     String countryName,
-    List<Sticker> stickers,
+    List<Sticker> collection,
     CountryFlag flag,
     String flagEmoji,
   ) async {
@@ -526,7 +524,7 @@ class CreateCollectionHelper {
         flagEmoji: flagEmoji,
       );
 
-      stickers.add(sticker);
+      collection.add(sticker);
       n++;
     }
   }
