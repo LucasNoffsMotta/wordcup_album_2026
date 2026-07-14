@@ -5,7 +5,7 @@ An open-source Flutter application inspired by the <strong>Figuritas</strong> ap
 </p>
 
 
-![me]([https://github.com/Daisyliu6/Daisyliu6/blob/master/me.gif](https://github.com/LucasNoffsMotta/wordcup_album_2026/blob/master/_exe.gif))
+![Demo](_exe.gif)
 
 <p>
 The goal of this project is to provide a free, modern, and transparent alternative for managing sticker albums while serving as a learning project for Flutter development.
