@@ -11,6 +11,37 @@ An open-source Flutter application inspired by the <strong>Figuritas</strong> ap
 The goal of this project is to provide a free, modern, and transparent alternative for managing sticker albums while serving as a learning project for Flutter development.
 </p>
 
+<h2>Getting Started</h2>
+
+<p>
+To run this project locally, make sure you have the Flutter SDK installed.
+</p>
+
+<h3>Requirements</h3>
+
+<ul>
+  <li>Flutter SDK (latest stable version)</li>
+  <li>Dart SDK (included with Flutter)</li>
+  <li>Android Studio, VS Code, or another Flutter-compatible IDE</li>
+  <li>An emulator or a physical device</li>
+</ul>
+
+<h3>Installation</h3>
+
+<pre><code>git clone https://github.com/your-username/world-cup-2026-sticker-album.git
+cd world-cup-2026-sticker-album
+flutter pub get
+flutter run
+</code></pre>
+
+<p>
+If multiple devices are available, you can specify one using:
+</p>
+
+<pre><code>flutter devices
+flutter run -d &lt;device-id&gt;
+</code></pre>
+
 <h2>Features</h2>
 
 <ul>
