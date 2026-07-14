@@ -4,7 +4,8 @@
 An open-source Flutter application inspired by the <strong>Figuritas</strong> app, created to help collectors organize and track their <strong>FIFA World Cup 2026</strong> sticker collections.
 </p>
 
-https://github.com/LucasNoffsMotta/wordcup_album_2026/blob/master/_exe.gif
+
+![me]([https://github.com/Daisyliu6/Daisyliu6/blob/master/me.gif](https://github.com/LucasNoffsMotta/wordcup_album_2026/blob/master/_exe.gif))
 
 <p>
 The goal of this project is to provide a free, modern, and transparent alternative for managing sticker albums while serving as a learning project for Flutter development.
