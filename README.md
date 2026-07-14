@@ -5,7 +5,7 @@ An open-source Flutter application inspired by the <strong>Figuritas</strong> ap
 </p>
 
 
-![Demo](_exe.gif)
+![Demo](_exec.gif)
 
 <p>
 The goal of this project is to provide a free, modern, and transparent alternative for managing sticker albums while serving as a learning project for Flutter development.
