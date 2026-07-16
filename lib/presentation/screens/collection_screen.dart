@@ -9,7 +9,6 @@ import 'package:wordcup_album_2026/data/export_cards_service.dart';
 import 'package:wordcup_album_2026/data/import_cards_service.dart';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
 import 'package:wordcup_album_2026/presentation/statistic_builder_helper.dart';
-import 'package:wordcup_album_2026/models/collection_data.dart';
 import 'package:wordcup_album_2026/presentation/widgets/collection_qr_code.dart';
 
 /*
@@ -27,7 +26,7 @@ Separar em services:
 - ExportService - DONE
 - createSectuions - DONE
 - FilterService - Move CurrentSelectionData to a separate class that will handle the filter - DONE
-- StatisticService
+- StatisticService - DONE
 - QRCodeService
 - Move sections Widget to separate class
 */
@@ -352,30 +351,7 @@ class CollectionScreenState extends State<CollectionScreen> {
   }
 
   Widget getStatisticScreen() {
-    int collection = CollectionDataService.collection
-        .where((sticker) => sticker.ammount > 0)
-        .length;
-    int totalCardsOwned = CollectionDataService.collection.fold(
-      0,
-      (sum, item) => sum + item.ammount,
-    );
-
-    CollectionData data = CollectionData(
-      progressionPercentage: StatisticBuilderHelper.getCompletionPercentage(
-        collection,
-      ),
-      totalCardsOwned: totalCardsOwned,
-      doubledCards: CollectionDataService.collection
-          .where((sticker) => sticker.ammount > 1)
-          .length,
-      missingCards: CollectionDataService.collection
-          .where((sticker) => sticker.ammount == 0)
-          .length,
-      boostersBought: StatisticBuilderHelper.getBoughtBoosters(
-        totalCardsOwned,
-      ).toInt(),
-    );
-    return StatisticBuilderHelper.getChartsScreenTable(data, screenWidth / 6);
+    return StatisticBuilderHelper.getChartsScreenTable(screenWidth / 6);
   }
 
   Widget _setPageBody(BuildContext context) {

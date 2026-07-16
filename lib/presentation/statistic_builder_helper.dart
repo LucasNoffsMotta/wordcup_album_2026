@@ -2,6 +2,7 @@ import 'package:currency_formatter/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:wordcup_album_2026/data/collection_data_service.dart';
 import 'package:wordcup_album_2026/models/collection_data.dart';
 
 class StatisticBuilderHelper {
@@ -33,14 +34,42 @@ class StatisticBuilderHelper {
     return totalCards / cardsPerPackage;
   }
 
-  static Widget getChartsScreenTable(CollectionData data, double padding) {
+  static CollectionData _getCollectionData() {
+    int collection = CollectionDataService.collection
+        .where((sticker) => sticker.ammount > 0)
+        .length;
+    int totalCardsOwned = CollectionDataService.collection.fold(
+      0,
+      (sum, item) => sum + item.ammount,
+    );
+
+    CollectionData data = CollectionData(
+      progressionPercentage: StatisticBuilderHelper.getCompletionPercentage(
+        collection,
+      ),
+      totalCardsOwned: totalCardsOwned,
+      doubledCards: CollectionDataService.collection
+          .where((sticker) => sticker.ammount > 1)
+          .length,
+      missingCards: CollectionDataService.collection
+          .where((sticker) => sticker.ammount == 0)
+          .length,
+      boostersBought: StatisticBuilderHelper.getBoughtBoosters(
+        totalCardsOwned,
+      ).toInt(),
+    );
+
+    return data;
+  }
+
+  static Widget getChartsScreenTable(double padding) {
     return Expanded(
       child: Card(
         color: Color.fromRGBO(14, 21, 27, 1),
         child: Center(
           child: Column(
             children: [
-              getCollectionProgressChart(data, padding),
+              getCollectionProgressChart(_getCollectionData(), padding),
             ],
           ),
         ),
