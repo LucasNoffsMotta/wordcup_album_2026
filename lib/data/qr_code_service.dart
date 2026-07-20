@@ -1,7 +1,31 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
+import 'package:wordcup_album_2026/data/tradeCardsPair.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
+
+// Three scenarios:
+
+// Smaller QR Code 
+// Advantage: Only integer numbers, smaller data to fit in the code
+// Disadvantage: A little bit more complex to parse, also will send data that is not usefull (cards with ammount == 1) 
+// 1 - QR code send all the collection, each position being exactly the position of the card on the array,
+// each number scent represents the ammount of that card on the collection. Ex:
+// 0, 4, 1, 5, 0 ...
+
+// Larger QR Code:
+// Advantage: Only sends usefull data
+// Disadvantage: Needs to send a more complex dataset - String
+
+// 2 - System sends two sets of data: 
+//  1st: Cards with 0 ammount
+//  2nd: Cards with ammount > 1
+
+
+// 3 - Send only the relevant cards:
+// 1st number: position of the card (index)
+// 2nd number: ammount (0 if needs, 1 if can trade)
+// 1.1;2.0;3.1;4.0
 
 class QrCodeTradeService {
 
@@ -43,7 +67,18 @@ class QrCodeTradeService {
     return otherCollection;
   }
 
-  List<Sticker> _getFinalTradeCards(Map<String, Sticker> otherCollection ) {
-    
+    List<Tradecardspair> _getFinalTradeCards(Map<String, Sticker> otherCollection ) {
+      //Need a:
+      //Key value pair: my card, other card
+      //A class: TradePair?
+      List<Tradecardspair> tradeDeal = [];
+      for(var v in otherCollection.values) {
+        if (v.ammount == 0) {
+          if (CollectionDataService.collectionMap[v.toString()]!.ammount > 1) {      
+            tradeDeal.add(Tradecardspair(give: CollectionDataService.collectionMap[v.toString()]!, receive: v));
+          }
+        }
+      }
+      return tradeDeal;
   }
 }
