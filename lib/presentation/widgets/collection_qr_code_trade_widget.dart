@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class CollectionQrCode extends StatelessWidget {
-  const CollectionQrCode(this.collection, this.padding, {super.key});
+class CollectionQrCodeTradeWidget extends StatelessWidget {
+  const CollectionQrCodeTradeWidget(this.collection, this.padding, {super.key});
   final String collection;
   final double padding;
 
-  void readQRCode() {
-
+  Widget _openCamera() {
+    return MobileScanner(
+      onDetect: (result) {
+        print(result.barcodes.first.rawValue);
+      },
+    );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +46,23 @@ class CollectionQrCode extends StatelessWidget {
                       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       data: collection,
                       size: 120,
-                      version: QrVersions
-                          .auto, 
+                      version: QrVersions.auto,
                       errorCorrectionLevel: QrErrorCorrectLevel.L,
                     ),
                     Divider(height: 3, thickness: 3),
                     Text(
                       "Escaneie o QR code para ver quais figurinhas pode trocar.",
+                    ),
+                    Card(
+                      shape: CircleBorder(
+                        side: BorderSide(
+                          color: const Color.fromARGB(255, 213, 247, 255),
+                        ),
+                      ), //
+                      child: InkWell(
+                        onTap: () => _openCamera(),
+                        child: Icon(Icons.camera),
+                      ),
                     ),
                   ],
                 ),

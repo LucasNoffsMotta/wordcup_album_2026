@@ -8,6 +8,12 @@ class Sticker {
   CountryFlag? flag;
   String? flagEmoji;
 
+
+  @override 
+  toString() {
+    return section + number;
+  }
+
   Sticker({
     required this.section,
     required this.ammount,

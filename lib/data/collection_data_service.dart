@@ -10,12 +10,18 @@ class CollectionDataService {
   static Map<String, List<CountrySection>> sectionsMap =
       <String, List<CountrySection>>{};
 
-  static String getStickersToTradeString() {
-  List<int> stickers = CollectionDataService.collection
-      .map((s) => s.ammount > 1 ? 1 : 0)
-      .toList();
+/// 1 = can trade
+/// 2 = can receive
+  static String getStickersToTradeBitMap() {
+    List<String> qrRawDataList = [];
+    for(int i = 0; i < CollectionDataService.collection.length; i++) {
+      if (CollectionDataService.collection[i].ammount > 1 || CollectionDataService.collection[i].ammount == 0){ 
+        String sData = i.toString() + "." + (CollectionDataService.collection[i].ammount == 0 ? "0" : "1");
+        qrRawDataList.add(sData);
+      }
+    }
 
-  return stickers.join("");
+  return qrRawDataList.join(";");
   }
 
   static void deleteCollection() {

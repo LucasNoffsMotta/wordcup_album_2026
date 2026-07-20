@@ -16,7 +16,7 @@ class CardCellState extends State<CardCell> {
   Future<void> incrementStickerCount() async {
     setState(() {
       widget.sticker!.ammount += 1;
-      SharedPrefs.setIntValue(widget.sticker!.section + widget.sticker!.number, widget.sticker!.ammount);
+      SharedPrefs.setIntValue(widget.sticker!.toString(), widget.sticker!.ammount);
     });
   }
 
@@ -24,7 +24,7 @@ class CardCellState extends State<CardCell> {
     setState(() {
       if (widget.sticker!.ammount >= 1) {
         widget.sticker!.ammount -= 1;
-        SharedPrefs.setIntValue(widget.sticker!.section + widget.sticker!.number, widget.sticker!.ammount);
+        SharedPrefs.setIntValue(widget.sticker!.toString(), widget.sticker!.ammount);
       }
     });
   }

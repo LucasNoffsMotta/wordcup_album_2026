@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:core';
-import 'dart:io';
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +6,9 @@ import 'package:wordcup_album_2026/business_rules/screen_filters.dart';
 import 'package:wordcup_album_2026/data/export_cards_service.dart';
 import 'package:wordcup_album_2026/data/import_cards_service.dart';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
+import 'package:wordcup_album_2026/data/qr_code_service.dart';
 import 'package:wordcup_album_2026/presentation/statistic_builder_helper.dart';
-import 'package:wordcup_album_2026/presentation/widgets/collection_qr_code.dart';
+import 'package:wordcup_album_2026/presentation/widgets/collection_qr_code_trade_widget.dart';
 
 /*
 REFACTOR!
@@ -27,7 +26,7 @@ Separar em services:
 - createSectuions - DONE
 - FilterService - Move CurrentSelectionData to a separate class that will handle the filter - DONE
 - StatisticService - DONE
-- QRCodeService
+- QRCodeService - 
 - Move sections Widget to separate class
 */
 
@@ -51,6 +50,7 @@ class CollectionScreenState extends State<CollectionScreen> {
   late Widget collectionScreen;
   final TextEditingController _textFieldController = TextEditingController();
   final ImportCardsService _importService = ImportCardsService();
+  final QrCodeTradeService _qrCodeService = QrCodeTradeService();
 
 
   @override
@@ -335,19 +335,17 @@ class CollectionScreenState extends State<CollectionScreen> {
     );
   }
 
-
-  //TODO: Obviously this data shouldn`t be shared as a string.
-  //May create a bitset:
-  // 0 -> Can trade
-  // 1 -> Cannot trade
-  Widget getQrCode() {
-    String qrCode = CollectionDataService.getStickersToTradeString();
-    List<int> stringBytes = utf8.encode(qrCode);
-    List<int> gzippedBytes = gzip.encode(stringBytes);
-    String base64GzipString = base64.encode(gzippedBytes);
-
-    print(base64GzipString);
-    return CollectionQrCode(base64GzipString, screenWidth / 6);
+  Widget getQrCodeScreen() {
+    //Test:
+    String encoded = _qrCodeService.encodeCollection();
+    String decoded =_qrCodeService.decodeCollection(encoded);
+    var testMap = _qrCodeService.parseCodeToCollection(decoded);
+    
+    for(var card in testMap.values) {
+      print(card.toString());
+    }
+    
+    return CollectionQrCodeTradeWidget(_qrCodeService.encodeCollection(), screenWidth / 6);
   }
 
   Widget getStatisticScreen() {
@@ -367,7 +365,7 @@ class CollectionScreenState extends State<CollectionScreen> {
         current = getStatisticScreen();
         break;
       case Screens.qrCode:
-        current = getQrCode();
+        current = getQrCodeScreen();
     }
     return current;
   }
