@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
@@ -6,9 +7,9 @@ import 'package:wordcup_album_2026/models/sticker.dart';
 
 // Three scenarios:
 
-// Smaller QR Code 
+// Smaller QR Code
 // Advantage: Only integer numbers, smaller data to fit in the code
-// Disadvantage: A little bit more complex to parse, also will send data that is not usefull (cards with ammount == 1) 
+// Disadvantage: A little bit more complex to parse, also will send data that is not usefull (cards with ammount == 1)
 // 1 - QR code send all the collection, each position being exactly the position of the card on the array,
 // each number scent represents the ammount of that card on the collection. Ex:
 // 0, 4, 1, 5, 0 ...
@@ -17,10 +18,9 @@ import 'package:wordcup_album_2026/models/sticker.dart';
 // Advantage: Only sends usefull data
 // Disadvantage: Needs to send a more complex dataset - String
 
-// 2 - System sends two sets of data: 
+// 2 - System sends two sets of data:
 //  1st: Cards with 0 ammount
 //  2nd: Cards with ammount > 1
-
 
 // 3 - Send only the relevant cards:
 // 1st number: position of the card (index)
@@ -28,19 +28,18 @@ import 'package:wordcup_album_2026/models/sticker.dart';
 // 1.1;2.0;3.1;4.0
 
 class QrCodeTradeService {
-
-    String encodeCollection(){
-      String qrCode = CollectionDataService.getStickersToTradeBitMap();
-      List<int> stringBytes = utf8.encode(qrCode);
-      List<int> gzippedBytes = gzip.encode(stringBytes);
-      return base64.encode(gzippedBytes);
+  String encodeCollection() {
+    String qrCode = CollectionDataService.getStickersToTradeBitMap();
+    List<int> stringBytes = utf8.encode(qrCode);
+    List<int> gzippedBytes = gzip.encode(stringBytes);
+    return base64.encode(gzippedBytes);
   }
 
   String decodeCollection(String code) {
-      List<int> decoded = base64.decode(code);
-      List<int> gbytes = gzip.decode(decoded);
-      String stickers = utf8.decode(gbytes);
-      return stickers;
+    List<int> decoded = base64.decode(code);
+    List<int> gbytes = gzip.decode(decoded);
+    String stickers = utf8.decode(gbytes);
+    return stickers;
   }
 
   //Code Lenght MUST be equal collection length!
@@ -54,31 +53,47 @@ class QrCodeTradeService {
     List<String> otherCollectionData = code.split(";");
     Map<String, Sticker> otherCollection = {};
 
-    for(var s in otherCollectionData) {
+    for (var s in otherCollectionData) {
       List<String> parts = s.split(".");
       var index = parts[0];
       var tradeStatus = parts[1];
-      
+
       Sticker dummy = CollectionDataService.collection[int.parse(index)];
-      Sticker newCard = Sticker(section: dummy.section, ammount: (int.parse(tradeStatus) == 0 ? 0 : 1), number: dummy.number, sectionName: dummy.sectionName);
+      Sticker newCard = Sticker(
+        id: dummy.id,
+        section: dummy.section,
+        ammount: (int.parse(tradeStatus) == 0 ? 0 : 1),
+        number: dummy.number,
+        sectionName: dummy.sectionName,
+      );
       otherCollection[dummy.toString()] = newCard;
     }
 
     return otherCollection;
   }
 
-    List<Tradecardspair> _getFinalTradeCards(Map<String, Sticker> otherCollection ) {
-      //Need a:
-      //Key value pair: my card, other card
-      //A class: TradePair?
-      List<Tradecardspair> tradeDeal = [];
-      for(var v in otherCollection.values) {
-        if (v.ammount == 0) {
-          if (CollectionDataService.collectionMap[v.toString()]!.ammount > 1) {      
-            tradeDeal.add(Tradecardspair(give: CollectionDataService.collectionMap[v.toString()]!, receive: v));
-          }
-        }
+  List<Tradecardspair> _getFinalTradeCards(
+    Map<String, Sticker> otherCollection,
+  ) {
+    //Need a:
+    //Key value pair: my card, other card
+    //A class: TradePair?
+    //Give a card that I dont need (and other player needs), and receive a card that I need and other player dont need
+    //Algorithhm design:
+    //
+    List<Tradecardspair> tradePairs = [];
+    List<Sticker> otherCanGive = otherCollection.entries.where((element) => element.value.ammount == 1).map((e) => e.value).toList();
+    List<Sticker> otherNeeds = otherCollection.entries.where((element) => element.value.ammount == 0).map((e) => e.value).toList();
+
+     for(var s in CollectionDataService.collection) {
+      if(s.ammount==0 && otherNeeds.contains(s)) {
+        if()
+      }  
+
+
       }
-      return tradeDeal;
+     }
+    
+    return tradePairs;
   }
 }

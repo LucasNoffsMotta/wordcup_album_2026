@@ -514,8 +514,10 @@ class CreateCollectionHelper {
     String flagEmoji,
   ) async {
     int n = firstNumber;
+    int id = 0;
     while (n <= sectionSize) {
       Sticker sticker = Sticker(
+        id: id,
         section: name,
         ammount: SharedPrefs.instance.getInt(name + n.toString()) ?? 0,
         number: n.toString(),
@@ -523,7 +525,7 @@ class CreateCollectionHelper {
         flag: flag,
         flagEmoji: flagEmoji,
       );
-
+      id++;
       collection.add(sticker);
       n++;
     }
