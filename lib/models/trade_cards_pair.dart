@@ -1,8 +1,8 @@
 import 'package:wordcup_album_2026/models/sticker.dart';
 
-class Tradecardspair {
+class TradeCardsPair {
   late Sticker give;
   late Sticker receive;
 
-  Tradecardspair({required this.give, required this.receive});
+  TradeCardsPair({required this.give, required this.receive});
 }

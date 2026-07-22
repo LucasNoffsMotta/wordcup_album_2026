@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
-import 'package:wordcup_album_2026/data/tradeCardsPair.dart';
+import 'package:wordcup_album_2026/models/trade_cards_pair.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 
 // Three scenarios:

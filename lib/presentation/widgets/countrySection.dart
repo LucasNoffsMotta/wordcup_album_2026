@@ -1,7 +1,7 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
-import 'package:wordcup_album_2026/presentation/widgets/cardRow.dart';
+import 'package:wordcup_album_2026/presentation/widgets/card_row_widget.dart';
 
 class CountrySection extends StatefulWidget {
   final List<Sticker> cards;
@@ -42,7 +42,7 @@ Widget build(BuildContext context) {
           spacing: 1.0,
           runSpacing: 2.0,
           children: widget.cards
-              .map((s) => CardCell(
+              .map((s) => CardRowWidget(
                     key: ValueKey(s.number),
                     sticker: s,
                   ))

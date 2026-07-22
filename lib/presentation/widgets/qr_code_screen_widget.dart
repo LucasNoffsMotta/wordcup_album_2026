@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class CollectionQrCodeTradeWidget extends StatelessWidget {
-  const CollectionQrCodeTradeWidget(this.collection, this.padding, {super.key});
+class QrCodeScreenWidget extends StatelessWidget {
+  const QrCodeScreenWidget(this.collection, this.padding, {super.key});
   final String collection;
   final double padding;
 
@@ -45,7 +45,7 @@ class CollectionQrCodeTradeWidget extends StatelessWidget {
                     QrImageView(
                       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       data: collection,
-                      size: 120,
+                      size: 220,
                       version: QrVersions.auto,
                       errorCorrectionLevel: QrErrorCorrectLevel.L,
                     ),

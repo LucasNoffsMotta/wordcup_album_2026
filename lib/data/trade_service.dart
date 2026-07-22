@@ -1,5 +1,5 @@
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
-import 'package:wordcup_album_2026/data/tradeCardsPair.dart';
+import 'package:wordcup_album_2026/models/trade_cards_pair.dart';
 import 'package:wordcup_album_2026/models/sticker.dart';
 
 class TradeService {
@@ -45,12 +45,12 @@ class TradeService {
   //Save it
   //Do it again, excluding the saved ones
 
-  List<Tradecardspair>? getTradeDeal(Map<String, Sticker> otherCollection) {
+  List<TradeCardsPair>? getTradeDeal(Map<String, Sticker> otherCollection) {
     cardsAdded = {};
     Set<Sticker> cardsSearched = {}; 
-    List<Tradecardspair>? tradeCardsDeal = [];
+    List<TradeCardsPair>? tradeCardsDeal = [];
     int maxLoops = CollectionDataService.collection.length;
-    int loopCount = 0;
+    int loopCount = CollectionDataService.collection.length; // Test! It will never enter the loop
 
     while (loopCount < maxLoops) {
       Sticker? need = findCardINeed();
@@ -80,7 +80,7 @@ class TradeService {
         continue;
       }
 
-      tradeCardsDeal.add(Tradecardspair(give: giveCard, receive: receiveCard));
+      tradeCardsDeal.add(TradeCardsPair(give: giveCard, receive: receiveCard));
       cardsAdded.add(giveCard);
       cardsAdded.add(receiveCard);
       loopCount++;

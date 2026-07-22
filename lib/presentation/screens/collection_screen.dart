@@ -8,11 +8,10 @@ import 'package:wordcup_album_2026/data/export_cards_service.dart';
 import 'package:wordcup_album_2026/data/import_cards_service.dart';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
 import 'package:wordcup_album_2026/data/qr_code_service.dart';
-import 'package:wordcup_album_2026/data/tradeCardsPair.dart';
+import 'package:wordcup_album_2026/models/trade_cards_pair.dart';
 import 'package:wordcup_album_2026/data/trade_service.dart';
-import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/presentation/statistic_builder_helper.dart';
-import 'package:wordcup_album_2026/presentation/widgets/collection_qr_code_trade_widget.dart';
+import 'package:wordcup_album_2026/presentation/widgets/qr_code_screen_widget.dart';
 
 /*
 REFACTOR!
@@ -354,7 +353,7 @@ class CollectionScreenState extends State<CollectionScreen> {
     }
 
     TradeService _ts = TradeService();
-    List<Tradecardspair>? tradeDeal = _ts.getTradeDeal(testMap);
+    List<TradeCardsPair>? tradeDeal = _ts.getTradeDeal(testMap);
 
     if (tradeDeal != null) {
       for (var t in tradeDeal) {
@@ -364,7 +363,7 @@ class CollectionScreenState extends State<CollectionScreen> {
       }
     }
 
-    return CollectionQrCodeTradeWidget(
+    return QrCodeScreenWidget(
       _qrCodeService.encodeCollection(CollectionDataService.collection),
       screenWidth / 6,
     );
