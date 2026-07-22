@@ -3,10 +3,14 @@ import 'dart:core';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:wordcup_album_2026/business_rules/screen_filters.dart';
+import 'package:wordcup_album_2026/data/create_collection_helper.dart';
 import 'package:wordcup_album_2026/data/export_cards_service.dart';
 import 'package:wordcup_album_2026/data/import_cards_service.dart';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
 import 'package:wordcup_album_2026/data/qr_code_service.dart';
+import 'package:wordcup_album_2026/data/tradeCardsPair.dart';
+import 'package:wordcup_album_2026/data/trade_service.dart';
+import 'package:wordcup_album_2026/models/sticker.dart';
 import 'package:wordcup_album_2026/presentation/statistic_builder_helper.dart';
 import 'package:wordcup_album_2026/presentation/widgets/collection_qr_code_trade_widget.dart';
 
@@ -51,7 +55,6 @@ class CollectionScreenState extends State<CollectionScreen> {
   final TextEditingController _textFieldController = TextEditingController();
   final ImportCardsService _importService = ImportCardsService();
   final QrCodeTradeService _qrCodeService = QrCodeTradeService();
-
 
   @override
   void dispose() {
@@ -212,7 +215,7 @@ class CollectionScreenState extends State<CollectionScreen> {
       setFilter(Filters.all);
     } else {
       setState(() {
-        CollectionDataService.search(input);
+        CollectionDataService.search(input, filter);
       });
     }
   }
@@ -228,9 +231,8 @@ class CollectionScreenState extends State<CollectionScreen> {
     String snackBarContent = _importService.tryAddCollectionByString(input)
         ? "Adicionado com sucesso!"
         : "Nenhum match encontrado.";
-    
-    setState(() {
-    });
+
+    setState(() {});
 
     ScaffoldMessenger.of(
       context,
@@ -282,7 +284,7 @@ class CollectionScreenState extends State<CollectionScreen> {
                     ),
                     label: Text("Faltando", style: TextStyle(fontSize: 20)),
                     onPressed: () {
-                     ExportCardsService.export(Filters.missing);
+                      ExportCardsService.export(Filters.missing);
                     },
                     icon: Icon(Icons.share_rounded),
                   ),
@@ -327,7 +329,11 @@ class CollectionScreenState extends State<CollectionScreen> {
           ),
           Expanded(
             child: ListView(
-              children: [...CollectionDataService.sectionsMap.values.expand((section) => section)],
+              children: [
+                ...CollectionDataService.sectionsMap.values.expand(
+                  (section) => section,
+                ),
+              ],
             ),
           ),
         ],
@@ -337,15 +343,31 @@ class CollectionScreenState extends State<CollectionScreen> {
 
   Widget getQrCodeScreen() {
     //Test:
-    String encoded = _qrCodeService.encodeCollection();
-    String decoded =_qrCodeService.decodeCollection(encoded);
+    String encoded = _qrCodeService.encodeCollection(
+      CreateCollectionHelper.createTestCollection(),
+    );
+    String decoded = _qrCodeService.decodeCollection(encoded);
     var testMap = _qrCodeService.parseCodeToCollection(decoded);
-    
-    for(var card in testMap.values) {
+
+    for (var card in testMap.values) {
       print(card.toString());
     }
-    
-    return CollectionQrCodeTradeWidget(_qrCodeService.encodeCollection(), screenWidth / 6);
+
+    TradeService _ts = TradeService();
+    List<Tradecardspair>? tradeDeal = _ts.getTradeDeal(testMap);
+
+    if (tradeDeal != null) {
+      for (var t in tradeDeal) {
+        print("Give: " + t.give.toString());
+        print("Take: " + t.receive.toString());
+        print("---------------------------------");
+      }
+    }
+
+    return CollectionQrCodeTradeWidget(
+      _qrCodeService.encodeCollection(CollectionDataService.collection),
+      screenWidth / 6,
+    );
   }
 
   Widget getStatisticScreen() {

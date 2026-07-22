@@ -12,11 +12,12 @@ class CollectionDataService {
 
 /// 1 = can trade
 /// 2 = can receive
-  static String getStickersToTradeBitMap() {
+  static String getStickersToTradeBitMap(List<Sticker> collection) {
     List<String> qrRawDataList = [];
-    for(int i = 0; i < CollectionDataService.collection.length; i++) {
-      if (CollectionDataService.collection[i].ammount > 1 || CollectionDataService.collection[i].ammount == 0){ 
-        String sData = i.toString() + "." + (CollectionDataService.collection[i].ammount == 0 ? "0" : "1");
+    
+    for(int i = 0; i < collection.length; i++) {
+      if (collection[i].ammount > 1 || collection[i].ammount == 0){ 
+        String sData = "$i.${collection[i].ammount == 0 ? "0" : "1"}";
         qrRawDataList.add(sData);
       }
     }
@@ -30,7 +31,8 @@ class CollectionDataService {
     }
   }
 
-  static void search(String input) {
+  static void search(String input, Filters current) {
+    filter(current);
     selectedCards = selectedCards
         .where(
           (item) => item.section.toLowerCase().contains(input.toLowerCase()),

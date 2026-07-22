@@ -5,7 +5,6 @@ import 'package:wordcup_album_2026/models/sticker.dart';
 class CreateCollectionHelper {
   CreateCollectionHelper._();
 
-
   static void createNewCollection(List<Sticker> collection) {
     const ImageTheme mainTheme = ImageTheme(
       shape: Circle(),
@@ -502,6 +501,34 @@ class CreateCollectionHelper {
       CountryFlag.fromCountryCode('AX', theme: mainTheme),
       '🏛️',
     );
+  }
+
+  static List<Sticker> createTestCollection() {
+    List<Sticker> testCollection = [
+      Sticker(
+        id: 0,
+        section: 'FWC',
+        ammount: 0,
+        number: 1.toString(),
+        sectionName: "Panamá",
+      ),
+      Sticker(
+        id: 0,
+        section: 'PAN',
+        ammount: 0,
+        number: 1.toString(),
+        sectionName: "Panamá",
+      ),
+      Sticker(
+        id: 1,
+        section: 'PAN',
+        ammount: 0,
+        number: 2.toString(),
+        sectionName: "Panamá",
+      ),
+    ];
+
+    return testCollection;
   }
 
   static Future<void> insertTeamSection(

@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:wordcup_album_2026/data/collection_data_service.dart';
@@ -28,8 +27,9 @@ import 'package:wordcup_album_2026/models/sticker.dart';
 // 1.1;2.0;3.1;4.0
 
 class QrCodeTradeService {
-  String encodeCollection() {
-    String qrCode = CollectionDataService.getStickersToTradeBitMap();
+  late Set<Sticker> cardsAdded;
+  String encodeCollection(List<Sticker> collection) {
+    String qrCode = CollectionDataService.getStickersToTradeBitMap(collection);
     List<int> stringBytes = utf8.encode(qrCode);
     List<int> gzippedBytes = gzip.encode(stringBytes);
     return base64.encode(gzippedBytes);
@@ -49,6 +49,7 @@ class QrCodeTradeService {
   // 3 - Instantiate the card using the index received, assuming that it is exactly the same index of the collection data
   // 4 - Sets the ammount based on the trade status (0 = needs, 1 = can trade)
   // 5 - Put it inside the map using the ID as the key
+
   Map<String, Sticker> parseCodeToCollection(String code) {
     List<String> otherCollectionData = code.split(";");
     Map<String, Sticker> otherCollection = {};
@@ -70,30 +71,5 @@ class QrCodeTradeService {
     }
 
     return otherCollection;
-  }
-
-  List<Tradecardspair> _getFinalTradeCards(
-    Map<String, Sticker> otherCollection,
-  ) {
-    //Need a:
-    //Key value pair: my card, other card
-    //A class: TradePair?
-    //Give a card that I dont need (and other player needs), and receive a card that I need and other player dont need
-    //Algorithhm design:
-    //
-    List<Tradecardspair> tradePairs = [];
-    List<Sticker> otherCanGive = otherCollection.entries.where((element) => element.value.ammount == 1).map((e) => e.value).toList();
-    List<Sticker> otherNeeds = otherCollection.entries.where((element) => element.value.ammount == 0).map((e) => e.value).toList();
-
-     for(var s in CollectionDataService.collection) {
-      if(s.ammount==0 && otherNeeds.contains(s)) {
-        if()
-      }  
-
-
-      }
-     }
-    
-    return tradePairs;
   }
 }
