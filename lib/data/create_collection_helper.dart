@@ -522,7 +522,7 @@ class CreateCollectionHelper {
       Sticker(
         id: 1,
         section: 'PAN',
-        ammount: 0,
+        ammount: 1,
         number: 2.toString(),
         sectionName: "Panamá",
       ),
